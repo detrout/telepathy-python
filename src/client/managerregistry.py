@@ -42,8 +42,9 @@ def _convert_pathlist(pathlist):
     return dirs
 
 class ManagerRegistry:
-    def __init__(self):
+    def __init__(self, bus=None):
         self.services = {}
+        self.bus = bus
 
     def LoadManager(self, path):
         config = ConfigParser.RawConfigParser()
@@ -132,7 +133,8 @@ class ManagerRegistry:
     def GetManager(self, manager):
         return telepathy.client.ConnectionManager(
             self.services[manager]['busname'],
-            self.services[manager]['objectpath'])
+            self.services[manager]['objectpath'],
+            bus = self.bus)
 
     def GetParams(self, manager, proto):
         """
