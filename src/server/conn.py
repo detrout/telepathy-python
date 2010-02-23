@@ -129,7 +129,7 @@ class Connection(_Connection, DBusProperties):
                 if not isinstance(value, (int, long)):
                     raise InvalidArgument('incorrect type to %s parameter, got %s, expected an int' % (parm, type(value)))
             elif sig == 'b':
-                if not isinstance(value, bool):
+                if not isinstance(value, (bool, dbus.Boolean)):
                     raise InvalidArgument('incorrect type to %s parameter, got %s, expected an boolean' % (parm, type(value)))
             else:
                 raise TypeError('unknown type signature %s in protocol parameters' % type)
