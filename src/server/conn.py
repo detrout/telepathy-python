@@ -486,8 +486,8 @@ class ConnectionInterfaceRequests(
                     if handle.get_name() == target_id and handle.get_type() == target_handle_type:
                         target_handle = handle.get_id()
                 if not target_handle:
-                    raise InvalidHandle('TargetID %s not valid for type %d' %
-                        target_id, target_handle_type)
+                    raise InvalidHandle('TargetID %s not valid for type %d' % (
+                        target_id, target_handle_type))
 
                 altered_properties[CHANNEL_INTERFACE + '.TargetHandle'] = \
                     target_handle
