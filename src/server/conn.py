@@ -178,9 +178,12 @@ class Connection(_Connection, DBusProperties):
     def set_self_handle(self, handle):
         self._self_handle = handle
 
-    def get_channel_path(self):
-        ret = '%s/channel%d' % (self._object_path, self._next_channel_id)
-        self._next_channel_id += 1
+    def get_channel_path(self, suffix):
+        if not suffix:
+            ret = '%s/channel%d' % (self._object_path, self._next_channel_id)
+            self._next_channel_id += 1
+        else:
+            ret = '%s/%s' % (self._object_path, suffix)
         return ret
 
     def add_channels(self, channels, signal=True):
