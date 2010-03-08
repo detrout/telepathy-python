@@ -170,22 +170,6 @@ class ChannelTypeFileTransfer(Channel, _ChannelTypeFileTransferIface):
         Channel.__init__(self, connection, manager, props)
 
 
-from telepathy._generated.Channel_Type_File_Transfer \
-        import ChannelTypeFileTransfer as _ChannelTypeFileTransferIface
-
-class ChannelTypeFileTransfer(Channel, _ChannelTypeFileTransferIface):
-    __doc__ = _ChannelTypeFileTransferIface.__doc__
-
-    def __init__(self, connection, manager, props):
-        """
-        Initialise the channel.
-
-        Parameters:
-        connection - the parent Telepathy Connection object
-        """
-        Channel.__init__(self, connection, manager, props)
-
-
 from telepathy._generated.Channel_Type_Streamed_Media \
         import ChannelTypeStreamedMedia as _ChannelTypeStreamedMediaIface
 
