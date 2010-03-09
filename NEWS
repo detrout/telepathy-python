@@ -1,9 +1,17 @@
-telepathy-python 0.15.16 (UNRELEASED)
+telepathy-python 0.15.16 (2010-03-09)
 =====================================
 
-Fixes:
+The "Capybara is a vegan rodent" release.
 
-telepathy-python 0.15.15 (2009-01-20)
+Enhancements:
+  * implement setting the Enabled property in the Debug interface
+  * Allow specifying the object path of channels
+
+Fixes:
+  * Return actual channel properties in EnsureChannel/CreateChannel
+  * Fix connection.check_parameters to accept dbus.Boolean
+
+telepathy-python 0.15.15 (2010-01-20)
 =====================================
 
 The "square" release.
