@@ -97,7 +97,7 @@ class ChannelManager(object):
             props, **args)
 
         self._conn.add_channels([channel], signal=signal)
-        if type in self._channels:
+        if handle and type in self._channels:
             self._channels[type].setdefault(handle, []).append(channel)
 
         return channel
