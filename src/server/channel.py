@@ -72,7 +72,7 @@ class Channel(_Channel, DBusProperties):
         self._implement_property_get(CHANNEL_INTERFACE,
             {'ChannelType': lambda: dbus.String(self.GetChannelType()),
              'Interfaces': lambda: dbus.Array(self.GetInterfaces(), signature='s'),
-             'TargetHandle': lambda: dbus.UInt32(self._handle.get_id()),
+             'TargetHandle': lambda: dbus.UInt32(self._get_target_handle()),
              'TargetHandleType': lambda: dbus.UInt32(self._get_handle_type()),
              'TargetID': lambda: dbus.String(self._get_target_id()),
              'Requested': lambda: self._requested})
@@ -88,6 +88,12 @@ class Channel(_Channel, DBusProperties):
 
     def _add_immutables(self, props):
         self._immutable_properties.update(props)
+
+    def _get_target_handle(self):
+        if self._handle:
+            return self._handle.get_id()
+        else:
+            return 0
 
     def _get_handle_type(self):
         if self._handle:
