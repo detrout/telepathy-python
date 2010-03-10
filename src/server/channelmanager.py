@@ -50,12 +50,18 @@ class ChannelManager(object):
     def _get_type_requested_handle(self, props):
         """Return the type, request and target handle from the requested
         properties"""
+        handle = None
+
         type = props[CHANNEL_INTERFACE + '.ChannelType']
         requested = props[CHANNEL_INTERFACE + '.Requested']
-        target_handle = props[CHANNEL_INTERFACE + '.TargetHandle']
-        target_handle_type = props[CHANNEL_INTERFACE + '.TargetHandleType']
 
-        handle = self._conn._handles[target_handle_type, target_handle]
+        try:
+            target_handle_type = props[CHANNEL_INTERFACE + '.TargetHandleType']
+            target_handle = props[CHANNEL_INTERFACE + '.TargetHandle']
+            handle = self._conn._handles[target_handle_type, target_handle]
+        except KeyError:
+            # if TargetHandleType=NONE
+            pass
 
         return (type, requested, handle)
 
