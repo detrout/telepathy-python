@@ -21,7 +21,8 @@ import dbus
 import dbus.service
 
 from telepathy.constants import (CONNECTION_HANDLE_TYPE_NONE,
-                                 CHANNEL_TEXT_MESSAGE_TYPE_NORMAL)
+                                 CHANNEL_TEXT_MESSAGE_TYPE_NORMAL,
+                                 HANDLE_TYPE_NONE)
 
 from telepathy.errors import InvalidArgument
 
@@ -63,9 +64,17 @@ class Channel(_Channel, DBusProperties):
 
         self._immutable_properties = dict()
 
-        self._handle = self._conn.handle(
-            props[CHANNEL_INTERFACE + '.TargetHandleType'],
-            props[CHANNEL_INTERFACE + '.TargetHandle'])
+        if CHANNEL_INTERFACE + '.TargetHandleType' in props \
+                and CHANNEL_INTERFACE + '.TargetHandle' in props:
+            if props[CHANNEL_INTERFACE + '.TargetHandleType'] == HANDLE_TYPE_NONE:
+                self._handle = None
+            else:
+                self._handle = self._conn.handle(
+                    props[CHANNEL_INTERFACE + '.TargetHandleType'],
+                    props[CHANNEL_INTERFACE + '.TargetHandle'])
+        else:
+            self._handle = None
+
         self._interfaces = set()
 
         DBusProperties.__init__(self)
