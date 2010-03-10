@@ -117,6 +117,7 @@ class Channel(_Channel, DBusProperties):
             return ''
 
     def get_props(self):
+        # Despite its name, this function actually only returns immutable properties.
         props = dict()
         for prop, iface in self._immutable_properties.items():
             props[iface + '.' + prop] = \
