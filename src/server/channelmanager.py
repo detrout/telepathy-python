@@ -25,14 +25,14 @@ class ChannelManager(object):
     def __init__(self, connection):
         self._conn = connection
 
-        self._requestable_channel_classes = dict()
+        self._requestable_channels = dict()
         self._channels = dict()
         self._fixed_properties = dict()
         self._available_properties = dict()
 
     def close(self):
         """Close channel manager and all the existing channels."""
-        for channel_type in self._requestable_channel_classes:
+        for channel_type in self._requestable_channels:
             for channels in self._channels[channel_type].values():
                 for channel in channels:
                     if channel._type == CHANNEL_TYPE_CONTACT_LIST:
@@ -42,7 +42,7 @@ class ChannelManager(object):
 
     def remove_channel(self, channel):
         "Remove channel from the channel manager"
-        for channel_type in self._requestable_channel_classes:
+        for channel_type in self._requestable_channels:
             for handle, channels in self._channels[channel_type].items():
                 if channel in channels :
                     channels.remove(channel)
@@ -90,10 +90,10 @@ class ChannelManager(object):
         """Create a new channel with theses properties"""
         type, _, handle = self._get_type_requested_handle(props)
 
-        if type not in self._requestable_channel_classes:
+        if type not in self._requestable_channels:
             raise NotImplemented('Unknown channel type "%s"' % type)
 
-        channel = self._requestable_channel_classes[type](
+        channel = self._requestable_channels[type](
             props, **args)
 
         self._conn.add_channels([channel], signal=signal)
@@ -113,7 +113,7 @@ class ChannelManager(object):
 
     def _implement_channel_class(self, type, make_channel, fixed, available):
         """Notify channel manager a channel with these properties can be created"""
-        self._requestable_channel_classes[type] = make_channel
+        self._requestable_channels[type] = make_channel
         self._channels.setdefault(type, {})
 
         self._fixed_properties[type] = fixed
@@ -123,7 +123,7 @@ class ChannelManager(object):
         """Return all the channel types that can be created"""
         retval = []
 
-        for channel_type in self._requestable_channel_classes:
+        for channel_type in self._requestable_channels:
             retval.append((self._fixed_properties[channel_type],
                 self._available_properties[channel_type]))
 
