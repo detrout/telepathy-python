@@ -27,8 +27,11 @@ class ChannelManager(object):
 
         self._requestable_channels = dict()
         self._channels = dict()
+
         self._fixed_properties = dict()
         self._available_properties = dict()
+
+        self._requestables = dict()
 
     def close(self):
         """Close channel manager and all the existing channels."""
@@ -111,6 +114,7 @@ class ChannelManager(object):
         else:
             return self.create_channel_for_props(props, signal, **args)
 
+    # Should use implement_channel_classes instead.
     def _implement_channel_class(self, type, make_channel, fixed, available):
         """Notify channel manager a channel with these properties can be created"""
         self._requestable_channels[type] = make_channel
@@ -119,12 +123,24 @@ class ChannelManager(object):
         self._fixed_properties[type] = fixed
         self._available_properties[type] = available
 
+    # Use this function instead of _implement_channel_class.
+    def implement_channel_classes(self, type, make_channel, classes):
+        self._requestable_channels[type] = make_channel
+        self._channels.setdefault(type, {})
+
+        self._requestables[type] = classes
+
     def get_requestable_channel_classes(self):
         """Return all the channel types that can be created"""
         retval = []
 
         for channel_type in self._requestable_channels:
-            retval.append((self._fixed_properties[channel_type],
-                self._available_properties[channel_type]))
+            retval.extend(self._requestables.get(channel_type, []))
+
+            # _implement_channel_class was used.
+            if channel_type in self._fixed_properties:
+                retval.append((self._fixed_properties[channel_type],
+                    self._available_properties.get(channel_type, [])))
+
 
         return retval
