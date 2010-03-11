@@ -3,7 +3,17 @@ telepathy-python 0.15.17 (UNRELEASED)
 
 Enhancements:
 
+ * New function ChannelManager.implement_channel_classes to deprecate
+   _implement_channel_class. This allows implementing multiple channel
+   classes per channel type. Fixes fd.o#26979.
+
+ * Add new NoneHandle class to represent a handle type of NONE, and
+   use this class so that telepathy.server.Handle's methods return
+   NoneHandle objects for HT=NONE, instead of None.
+
 Fixes:
+
+ * Allow TargetHandleType=NONE when requesting a new channel.
 
 telepathy-python 0.15.16 (2010-03-09)
 =====================================
