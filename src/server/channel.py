@@ -99,7 +99,8 @@ class Channel(_Channel, DBusProperties):
         self._immutable_properties.update(props)
 
     def get_props(self):
-        # Despite its name, this function actually only returns immutable properties.
+        """Despite its name, this function actually only returns immutable channel
+        properties."""
         props = dict()
         for prop, iface in self._immutable_properties.items():
             props[iface + '.' + prop] = \
