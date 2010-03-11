@@ -119,7 +119,11 @@ class ChannelManager(object):
 
     # Should use implement_channel_classes instead.
     def _implement_channel_class(self, type, make_channel, fixed, available):
-        """Notify channel manager a channel with these properties can be created"""
+        """Implement channel types in the channel manager, and add one channel
+        class that is retrieved in RequestableChannelClasses.
+
+        self.implement_channel_classes should be used instead, as it allows
+        implementing multiple channel classes."""
         self._requestable_channels[type] = make_channel
         self._channels.setdefault(type, {})
 
@@ -128,6 +132,20 @@ class ChannelManager(object):
 
     # Use this function instead of _implement_channel_class.
     def implement_channel_classes(self, type, make_channel, classes):
+        """Implement channel types in the channel manager, and add channel
+        classes that are retrieved in RequestableChannelClasses.
+
+          @type: the channel type
+          @make_channel: a function to call which returns a Channel object
+          @classes: a list of channel classes. E.g.
+
+            [ ( { '...ChannelType': '...Text', '...TargetHandleType': HANDLE_TYPE_CONTACT },
+                ['...TargetHandle'] )
+            ]
+
+            See the spec for more documentation on the
+            Requestable_Channel_Class struct.
+        """
         self._requestable_channels[type] = make_channel
         self._channels.setdefault(type, {})
 
