@@ -419,7 +419,7 @@ class ConnectionInterfaceRequests(
 
         # Allow TargetHandleType to be missing, but not to be otherwise broken.
         check_valid_type_if_exists('TargetHandleType',
-            lambda p: p >= 0 and p < (2**32)-1)
+            lambda p: p >= 0 and p <= LAST_HANDLE_TYPE)
 
         # Allow TargetType to be missing, but not to be otherwise broken.
         check_valid_type_if_exists('TargetHandle',
