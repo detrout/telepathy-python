@@ -1,6 +1,6 @@
 # telepathy-python - Base classes defining the interfaces of the Telepathy framework
 #
-# Copyright (C) 2005,2006 Collabora Limited
+# Copyright (C) 2005,2006,2009,2010 Collabora Limited
 # Copyright (C) 2005,2006 Nokia Corporation
 #
 # This library is free software; you can redistribute it and/or
@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+from telepathy.constants import HANDLE_TYPE_NONE
 
 class Handle(object):
     def __init__(self, id, handle_type, name):
@@ -43,3 +45,7 @@ class Handle(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+class NoneHandle(Handle):
+    def __init__(self):
+        Handle.__init__(self, 0, HANDLE_TYPE_NONE, '')
