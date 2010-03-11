@@ -19,7 +19,11 @@
 from telepathy.errors import NotImplemented
 
 from telepathy.interfaces import (CHANNEL_INTERFACE,
-                                 CHANNEL_TYPE_CONTACT_LIST)
+                                  CHANNEL_TYPE_CONTACT_LIST)
+
+from telepathy.constants import HANDLE_TYPE_NONE
+
+from telepathy.server.handle import NoneHandle
 
 class ChannelManager(object):
     def __init__(self, connection):
@@ -53,18 +57,17 @@ class ChannelManager(object):
     def _get_type_requested_handle(self, props):
         """Return the type, request and target handle from the requested
         properties"""
-        handle = None
-
         type = props[CHANNEL_INTERFACE + '.ChannelType']
         requested = props[CHANNEL_INTERFACE + '.Requested']
 
-        try:
-            target_handle_type = props[CHANNEL_INTERFACE + '.TargetHandleType']
+        target_handle_type = \
+            props.get(CHANNEL_INTERFACE + '.TargetHandleType', HANDLE_TYPE_NONE)
+
+        if target_handle_type == HANDLE_TYPE_NONE:
+            handle = NoneHandle()
+        else:
             target_handle = props[CHANNEL_INTERFACE + '.TargetHandle']
             handle = self._conn._handles[target_handle_type, target_handle]
-        except KeyError:
-            # if TargetHandleType=NONE
-            pass
 
         return (type, requested, handle)
 
@@ -100,7 +103,7 @@ class ChannelManager(object):
             props, **args)
 
         self._conn.add_channels([channel], signal=signal)
-        if handle and type in self._channels:
+        if handle.get_type() != HANDLE_TYPE_NONE and type in self._channels:
             self._channels[type].setdefault(handle, []).append(channel)
 
         return channel

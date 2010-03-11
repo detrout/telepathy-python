@@ -312,7 +312,7 @@ class Connection(_Connection, DBusProperties):
         self.check_connected()
         ret = []
         for channel in self._channels:
-            chan = (channel._object_path, channel._type, channel._get_handle_type(), channel._handle)
+            chan = (channel._object_path, channel._type, channel._handle.get_type(), channel._handle.get_id())
             ret.append(chan)
         return ret
 
