@@ -16,6 +16,8 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import warnings
+
 from telepathy.errors import NotImplemented
 
 from telepathy.interfaces import (CHANNEL_INTERFACE,
@@ -124,6 +126,9 @@ class ChannelManager(object):
 
         self.implement_channel_classes should be used instead, as it allows
         implementing multiple channel classes."""
+        warnings.warn('deprecated in favour of implement_channel_classes',
+            DeprecationWarning)
+
         self._requestable_channels[type] = make_channel
         self._channels.setdefault(type, {})
 
