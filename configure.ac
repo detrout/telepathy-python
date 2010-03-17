@@ -14,7 +14,7 @@ m4_define(telepathy_python_maybe_datestamp,
 m4_define(telepathy_python_version, telepathy_python_major_version.telepathy_python_minor_version.telepathy_python_micro_version[]telepathy_python_maybe_datestamp)
 
 AC_INIT(telepathy-python, telepathy_python_version,
-        [http://bugs.freedesktop.org/enter_bug.cgi?product=Telepathy&component=telepathy-python])
+        [http://bugs.freedesktop.org/enter_bug.cgi?product=Telepathy&component=tp-python])
 AM_INIT_AUTOMAKE
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
