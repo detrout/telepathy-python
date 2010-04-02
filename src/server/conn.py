@@ -450,9 +450,9 @@ class ConnectionInterfaceRequests(
         target_id = props.get(CHANNEL_INTERFACE + '.TargetID', None)
 
         # Handle type 0 cannot have a handle.
-        if target_handle_type == HANDLE_TYPE_NONE and target_handle != None:
+        if target_handle_type == HANDLE_TYPE_NONE and target_handle not in (None, 0):
             raise InvalidArgument('When TargetHandleType is NONE, ' +
-                'TargetHandle must be omitted')
+                'TargetHandle must be omitted or 0')
 
         # Handle type 0 cannot have a TargetID.
         if target_handle_type == HANDLE_TYPE_NONE and target_id != None:

@@ -1,3 +1,12 @@
+telepathy-python 0.15.18 (UNRELEASED)
+=====================================
+
+Enhancements:
+
+Fixes:
+
+ * fd.o#27378: allow TargetHandle=0 when TargetHandleType=NONE.
+
 telepathy-python 0.15.17 (2010-03-12)
 =====================================
 
