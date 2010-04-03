@@ -204,7 +204,7 @@ class ChannelTypeRoomList(Channel, _ChannelTypeRoomListIface):
         self._listing_rooms = False
         self._rooms = {}
 
-        self._add_immutables(self, {'Server': CHANNEL_TYPE_ROOM_LIST})
+        self._add_immutables({'Server': CHANNEL_TYPE_ROOM_LIST})
 
     @dbus.service.method(CHANNEL_TYPE_ROOM_LIST, in_signature='', out_signature='b')
     def GetListingRooms(self):
