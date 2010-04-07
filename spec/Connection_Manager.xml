@@ -72,16 +72,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
           <li>local-xmpp - Link-local XMPP (XEP-0174) (Bonjour, Salut)</li>
           <li>msn - MSNP (Windows Live Messenger)</li>
           <li>myspace - MySpaceIM</li>
+          <li>mxit - MXit</li>
           <li>napster - Napster</li>
           <li>qq - Tencent QQ</li>
           <li>sametime - IBM Lotus Sametime</li>
           <li>silc - SILC</li>
-          <li>sip - Session Initiation Protocol (SIP)</li>
+          <li>sip - Session Initiation Protocol (SIP), with or without
+            SIMPLE support</li>
           <li>skype - Skype</li>
           <li>tel - telephony (the PSTN, including GSM, CDMA and fixed-line
             telephony)</li>
           <li>trepia - Trepia</li>
           <li>yahoo - YMSG (Yahoo! Messenger)</li>
+          <li>yahoojp - Japanese version of YMSG</li>
           <li>zephyr - Zephyr</li>
         </ul>
       </tp:docstring>
@@ -176,7 +179,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
       </tp:docstring>
       <tp:possible-errors>
         <tp:error name="org.freedesktop.Telepathy.Error.NotImplemented">
-          The requested protocol is not supported by this manager
+          <tp:docstring>
+            The requested protocol is not supported by this manager
+          </tp:docstring>
         </tp:error>
       </tp:possible-errors>
     </method>
@@ -313,6 +318,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
             pings.</dd>
         </dl>
 
+        <p>Connection manager authors SHOULD avoid introducing parameters
+          whose default values would not be serializable in a
+          <code>.manager</code> file.</p>
+
+        <tp:rationale>
+          <p>The same serialization format is used in Mission Control
+            to store accounts.</p>
+        </tp:rationale>
+
         <p>Every successful RequestConnection call will cause the emission of a
         <tp:member-ref>NewConnection</tp:member-ref> signal for the same newly
         created connection. The
@@ -324,13 +338,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
       <tp:possible-errors>
         <tp:error name="org.freedesktop.Telepathy.Error.NetworkError"/>
         <tp:error name="org.freedesktop.Telepathy.Error.NotImplemented">
-          The requested protocol is not supported by this manager
+          <tp:docstring>
+            The requested protocol is not supported by this manager
+          </tp:docstring>
         </tp:error>
         <tp:error name="org.freedesktop.Telepathy.Error.NotAvailable">
-          The requested connection already appears to exist
+          <tp:docstring>
+            The requested connection already appears to exist
+          </tp:docstring>
         </tp:error>
         <tp:error name="org.freedesktop.Telepathy.Error.InvalidArgument">
-          Unrecognised connection parameters
+          <tp:docstring>
+            Unrecognised connection parameters
+          </tp:docstring>
         </tp:error>
       </tp:possible-errors>
     </method>
@@ -451,7 +471,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
         <dd>The object path as an ASCII string</dd>
       <dt>b (boolean)</dt>
         <dd>"true" (case-insensitively) or "1" means True, "false"
-          (case-insensitively) or "0" means False</dd>
+          (case-insensitively) or "0" means False; when writing a file,
+          "true" and "false" SHOULD be used</dd>
       <dt>y, q, u, t (8-, 16-, 32-, 64-bit unsigned integer)</dt>
         <dd>ASCII decimal integer</dd>
       <dt>n, i, x (16-, 32-, 64-bit signed integer)</dt>
