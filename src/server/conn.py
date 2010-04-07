@@ -91,8 +91,11 @@ class Connection(_Connection, DBusProperties):
         self._interfaces = set()
 
         DBusProperties.__init__(self)
-        self._implement_property_get(CONN_INTERFACE,
-                {'SelfHandle': lambda: dbus.UInt32(self.GetSelfHandle())})
+        self._implement_property_get(CONN_INTERFACE, {
+                'SelfHandle': lambda: dbus.UInt32(self.GetSelfHandle()),
+                'Interfaces': lambda: dbus.Array(self.GetInterfaces(), signature='s'),
+                'Status': lambda: dbus.UInt32(self.GetStatus())
+                 })
 
         self._proto = proto
 
