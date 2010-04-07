@@ -3,6 +3,10 @@ telepathy-python 0.15.18 (UNRELEASED)
 
 Enhancements:
 
+ * Telepathy specification 0.19.3.
+
+ * Connection now implements Interfaces and Status properties.
+
 Fixes:
 
  * fd.o#27378: allow TargetHandle=0 when TargetHandleType=NONE.
