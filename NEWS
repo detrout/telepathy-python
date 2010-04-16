@@ -11,6 +11,9 @@ Fixes:
 
  * fd.o#27378: allow TargetHandle=0 when TargetHandleType=NONE.
 
+ * fd.o#13623: TextChannel should not send messages with the same id
+   more than once.
+
 telepathy-python 0.15.17 (2010-03-12)
 =====================================
 

@@ -294,7 +294,10 @@ class ChannelTypeText(Channel, _ChannelTypeTextIface):
 
     @dbus.service.signal(CHANNEL_TYPE_TEXT, signature='uuuuus')
     def Received(self, id, timestamp, sender, type, flags, text):
-        self._pending_messages[id] = (timestamp, sender, type, flags, text)
+        if id in self._pending_messages:
+            raise ValueError("You can't receive the same message twice.")
+        else:
+            self._pending_messages[id] = (timestamp, sender, type, flags, text)
 
 
 from telepathy._generated.Channel_Interface_Chat_State \
