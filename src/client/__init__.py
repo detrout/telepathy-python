@@ -19,6 +19,8 @@
 
 from telepathy.client.interfacefactory import InterfaceFactory
 from telepathy.client.managerregistry import ManagerRegistry
+from telepathy.client.accountmgr import AccountManager
+from telepathy.client.account import Account
 from telepathy.client.connmgr import ConnectionManager
 from telepathy.client.conn import Connection
 from telepathy.client.channel import Channel

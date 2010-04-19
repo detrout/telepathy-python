@@ -1,5 +1,7 @@
 clientdir = $(pythondir)/telepathy/client
 client_PYTHON = \
+	accountmgr.py \
+	account.py \
 	channel.py \
 	connmgr.py \
 	conn.py \
