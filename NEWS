@@ -1,9 +1,9 @@
-telepathy-python 0.15.18 (UNRELEASED)
+telepathy-python 0.15.18 (2010-08-05)
 =====================================
 
 Enhancements:
 
- * Telepathy specification 0.19.3.
+ * Telepathy specification 0.19.10.
 
  * Connection now implements Interfaces and Status properties.
 
@@ -16,6 +16,8 @@ Fixes:
 
  * fd.o#13623: TextChannel should not send messages with the same id
    more than once.
+
+ * fd.o#27415: proper usage of _add_immutables in ChannelTypeRoomList
 
 telepathy-python 0.15.17 (2010-03-12)
 =====================================
