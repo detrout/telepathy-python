@@ -28,7 +28,7 @@
     <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
       <p>An interface for channels that can be made conceptually part of a
         <tp:dbus-ref namespace="org.freedesktop.Telepathy.Channel.Interface"
-          >Conference.DRAFT</tp:dbus-ref>, and can then be detached from that
+          >Conference</tp:dbus-ref>, and can then be detached from that
         conference.</p>
 
       <tp:rationale>
@@ -45,23 +45,20 @@
       <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
         <p>Request that this channel is removed from any
         <tp:dbus-ref namespace="org.freedesktop.Telepathy.Channel.Interface"
-          >Conference.DRAFT</tp:dbus-ref> of which it is a part.</p>
+          >Conference</tp:dbus-ref> of which it is a part.</p>
 
         <p>This implies that the media streams within the conference are put on
           hold and the media streams within the member channel leaving the
-          conference are unheld.
-          <strong>[FIXME: or, maybe it'd be less surprising if it didn't do
-            this?]</strong>
-        </p>
+          conference are unheld.</p>
       </tp:docstring>
 
       <tp:possible-errors>
-        <tp:error name="org.freedesktop.Telepathy.Errors.InvalidArgument">
+        <tp:error name="org.freedesktop.Telepathy.Error.InvalidArgument">
           <tp:docstring>
             This channel isn't in a conference.
           </tp:docstring>
         </tp:error>
-        <tp:error name="org.freedesktop.Telepathy.Errors.NotAvailable">
+        <tp:error name="org.freedesktop.Telepathy.Error.NotAvailable">
           <tp:docstring>
             This channel is in a conference but can't currently be split away
             from it.
