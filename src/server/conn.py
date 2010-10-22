@@ -39,7 +39,7 @@ from telepathy.interfaces import (CONN_INTERFACE,
                                   CONN_INTERFACE_RENAMING,
                                   CONNECTION_INTERFACE_REQUESTS,
                                   CHANNEL_INTERFACE)
-from telepathy.server.handle import Handle
+from telepathy.server.handle import Handle, NoneHandle
 from telepathy.server.properties import DBusProperties
 
 from telepathy._generated.Connection import Connection as _Connection
@@ -101,12 +101,17 @@ class Connection(_Connection, DBusProperties):
 
         self._status = CONNECTION_STATUS_DISCONNECTED
 
+        self._self_handle = NoneHandle()
         self._handles = weakref.WeakValueDictionary()
         self._next_handle_id = 1
         self._client_handles = {}
 
         self._channels = set()
         self._next_channel_id = 0
+
+    @property
+    def self_handle(self):
+        return self._self_handle
 
     def check_parameters(self, parameters):
         """
