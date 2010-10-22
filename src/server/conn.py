@@ -386,6 +386,29 @@ class ConnectionInterfaceCapabilities(_ConnectionInterfaceCapabilities):
         # return all my capabilities
         return [(ctype, caps[1]) for ctype, caps in my_caps.iteritems()]
 
+from telepathy._generated.Connection_Interface_Contact_Capabilities \
+        import ConnectionInterfaceContactCapabilities \
+        as _ConnectionInterfaceContactCapabilities
+
+class ConnectionInterfaceContactCapabilities(_ConnectionInterfaceContactCapabilities):
+    def __init__(self):
+        _ConnectionInterfaceContactCapabilities.__init__(self)
+        # { contact handle : list(Requestable Channel Class}
+        # RCC signature is a(a{sv}as)
+        self._contact_caps = {}
+
+    def GetContactCapabilities(self, handles):
+        if 0 in handles:
+            raise InvalidHandle('Contact handle list contains zero')
+
+        ret = dbus.Dictionary({}, signature='ua(a{sv}as)')
+        for handle in handles:
+            self.check_handle(HANDLE_TYPE_CONTACT, handle)
+            caps = self._contact_caps.get(handle, [])
+            ret[handle] = dbus.Array(caps, signature='(a{sv}as)')
+
+        return ret
+
 from telepathy._generated.Connection_Interface_Requests \
         import ConnectionInterfaceRequests \
         as _ConnectionInterfaceRequests
