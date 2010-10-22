@@ -341,12 +341,13 @@ class ConnectionInterfaceCapabilities(_ConnectionInterfaceCapabilities):
 
     @dbus.service.method(CONN_INTERFACE_CAPABILITIES, in_signature='au', out_signature='a(usuu)')
     def GetCapabilities(self, handles):
+        # Usage of 0 in handles has been deprecated
+        handles.remove_all(0)
         ret = []
         handle_type = HANDLE_TYPE_CONTACT
         for handle in handles:
-            if (handle != 0 and (handle_type, handle) not in self._handles):
-                raise InvalidHandle
-            elif handle in self._caps:
+            self.check_handle(handle_type, handle)
+            if handle in self._caps:
                 types = self._caps[handle]
                 for ctype, specs in types.items():
                     ret.append([handle, ctype, specs[0], specs[1]])
