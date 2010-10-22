@@ -27,6 +27,7 @@ from telepathy.constants import (CONNECTION_HANDLE_TYPE_NONE,
 from telepathy.errors import InvalidArgument
 
 from telepathy.interfaces import (CHANNEL_INTERFACE,
+                                  CHANNEL_INTERFACE_CONFERENCE,
                                   CHANNEL_INTERFACE_DTMF,
                                   CHANNEL_INTERFACE_GROUP,
                                   CHANNEL_INTERFACE_HOLD,
@@ -303,6 +304,50 @@ class ChannelTypeText(Channel, _ChannelTypeTextIface):
 from telepathy._generated.Channel_Interface_Chat_State \
         import ChannelInterfaceChatState
 
+from telepathy._generated.Channel_Interface_Conference \
+        import ChannelInterfaceConference as _ChannelInterfaceConference
+
+class ChannelInterfaceConference(_ChannelInterfaceConference, DBusProperties):
+
+    def __init__(self):
+        _ChannelInterfaceConference.__init__(self)
+        DBusProperties.__init__(self)
+
+        self._conference_channels = set()
+        self._conference_initial_channels = set()
+        self._conference_initial_invitees = set()
+        self._conference_invitation_message = ""
+        self._conference_original_channels = {}
+
+        # D-Bus properties for conference interface
+        self._implement_property_get(CHANNEL_INTERFACE_CONFERENCE, {
+            'Channels':
+                lambda: dbus.Array(self._conference_channels, signature='o'),
+            'InitialChannels':
+                lambda: dbus.Array(self._conference_initial_channels,
+                                   signature='o'),
+            'InitialInviteeHandles':
+                lambda: dbus.Array(
+                    [h.get_id() for h in self._conference_initial_invitees],
+                    signature='u'),
+            'InitialInviteeIDs':
+                lambda: dbus.Array(
+                    [h.get_name() for h in self._conference_initial_invitees],
+                    signature='s'),
+            'InvitationMessage':
+                lambda: dbus.String(self._conference_invitation_message),
+            'OriginalChannels':
+                lambda: dbus.Dictionary(self._conference_original_channels,
+                                        signature='uo')
+            })
+
+        # Immutable conference properties
+        self._add_immutables({
+                'InitialChannels': CHANNEL_INTERFACE_CONFERENCE,
+                'InitialInviteeIDs': CHANNEL_INTERFACE_CONFERENCE,
+                'InitialInviteeHandles': CHANNEL_INTERFACE_CONFERENCE,
+                'InvitationMessage': CHANNEL_INTERFACE_CONFERENCE
+                })
 
 from telepathy._generated.Channel_Interface_DTMF import ChannelInterfaceDTMF
 
