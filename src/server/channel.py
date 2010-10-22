@@ -152,6 +152,9 @@ class ChannelTypeContactList(Channel, _ChannelTypeContactListIface):
         Channel.__init__(self, connection, manager, props,
             object_path=object_path)
 
+    def Close(self):
+        raise telepathy.NotImplemented("Contact lists can't be closed")
+
 
 from telepathy._generated.Channel_Type_File_Transfer \
         import ChannelTypeFileTransfer as _ChannelTypeFileTransferIface

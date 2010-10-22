@@ -44,10 +44,15 @@ class ChannelManager(object):
         for channel_type in self._requestable_channels:
             for channels in self._channels[channel_type].values():
                 for channel in channels:
-                    if channel._type == CHANNEL_TYPE_CONTACT_LIST:
+                    try:
+                        if channel._type != CHANNEL_TYPE_CONTACT_LIST:
+                            channel.Close()
+                    except:
+                        pass
+                    try:
                         channel.remove_from_connection()
-                    else:
-                        channel.Close()
+                    except:
+                        pass
 
     def remove_channel(self, channel):
         "Remove channel from the channel manager"
