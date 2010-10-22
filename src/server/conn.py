@@ -158,6 +158,23 @@ class Connection(_Connection, DBusProperties):
         if (type <= HANDLE_TYPE_NONE or type > LAST_HANDLE_TYPE):
             raise InvalidArgument('handle type %s not known' % type)
 
+    def create_handle(self, type, name, **kwargs):
+        id = self.get_handle_id()
+        handle = Handle(id, handle_type, name)
+        self._handles[handle_type, id] = handle
+        return handle
+
+    def normalize_handle_name(self, type, name):
+        return name
+
+    def ensure_handle(self, type, name, **kwargs):
+        self.check_handle_type(type)
+        name = self.normalize_handle_name(type, name)
+        for candidate in self._handles.values():
+            if candidate.type == type and candidate.name == name:
+                return candidate
+        return self.create_handle(type, name, **kwargs)
+
     def get_handle_id(self):
         id = self._next_handle_id
         self._next_handle_id += 1
@@ -251,17 +268,7 @@ class Connection(_Connection, DBusProperties):
 
         ret = []
         for name in names:
-            handle = None
-            for candidate in self._handles.values():
-                if candidate.get_name() == name:
-                    handle = candidate
-                    break
-
-            if not handle:
-                id = self.get_handle_id()
-                handle = Handle(id, handle_type, name)
-                self._handles[handle_type, id] = handle
-
+            handle = self.ensure_handle(handle_type, name)
             self.add_client_handle(handle, sender)
             ret.append(handle.get_id())
 
