@@ -111,8 +111,12 @@ class Channel(_Channel, DBusProperties):
     @dbus.service.method(CHANNEL_INTERFACE, in_signature='', out_signature='')
     def Close(self):
         self.Closed()
-        self._chan_manager.remove_channel(self)
-        self._conn.remove_channel(self)
+        try:
+            self._chan_manager.remove_channel(self)
+            self._conn.remove_channel(self)
+            self.remove_from_connection()
+        except:
+            pass
 
     @dbus.service.method(CHANNEL_INTERFACE, in_signature='', out_signature='s')
     def GetChannelType(self):
