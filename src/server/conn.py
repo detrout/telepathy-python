@@ -57,6 +57,8 @@ class Connection(_Connection, DBusProperties):
 
     _optional_parameters = {}
     _mandatory_parameters = {}
+    _secret_parameters = {}
+    _parameter_defaults = {}
 
     def __init__(self, proto, account, manager=None):
         """
