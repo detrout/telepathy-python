@@ -38,7 +38,7 @@ class ConnectionManager(_ConnectionManager):
                                     object_path)
 
         self._connections = set()
-        self._protos = {}
+        self._protos = {} # proto name => Connection class
 
     def connected(self, conn):
         """
@@ -60,14 +60,17 @@ class ConnectionManager(_ConnectionManager):
 
         return False # when called in an idle callback
 
+    def check_proto(self, proto):
+        if proto not in self._protos:
+            raise NotImplemented('unknown protocol %s' % proto)
+
     @dbus.service.method(CONN_MGR_INTERFACE, in_signature='', out_signature='as')
     def ListProtocols(self):
         return self._protos.keys()
 
     def RequestConnection(self, proto, parameters):
-        if proto in self._protos:
-            conn = self._protos[proto](self, parameters)
-            self.connected(conn)
-            return (conn._name.get_name(), conn._object_path)
-        else:
-            raise NotImplemented('unknown protocol %s' % proto)
+        self.check_proto(proto)
+
+        conn = self._protos[proto](self, parameters)
+        self.connected(conn)
+        return (conn._name.get_name(), conn._object_path)
