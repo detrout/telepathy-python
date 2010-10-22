@@ -21,12 +21,14 @@ import dbus
 import dbus.service
 
 from telepathy.errors import NotImplemented
-from telepathy.interfaces import CONN_MGR_INTERFACE
+from telepathy.interfaces import (CONN_MGR_INTERFACE,
+                                  PROTOCOL)
+from telepathy.server.properties import DBusProperties
 
 from telepathy._generated.Connection_Manager \
         import ConnectionManager as _ConnectionManager
 
-class ConnectionManager(_ConnectionManager):
+class ConnectionManager(_ConnectionManager, DBusProperties):
     def __init__(self, name):
         """
         Initialise the connection manager.
@@ -37,8 +39,17 @@ class ConnectionManager(_ConnectionManager):
                                     dbus.service.BusName(bus_name, dbus.Bus(), do_not_queue=True),
                                     object_path)
 
+        self._interfaces = set()
         self._connections = set()
         self._protos = {} # proto name => Connection class
+        self._protocols = {} # proto name => Protocol object
+
+        DBusProperties.__init__(self)
+        self._implement_property_get(CONN_MGR_INTERFACE, {
+                'Interfaces': lambda: dbus.Array(self._interfaces, signature='s'),
+                'Protocols': lambda: dbus.Dictionary(self._protocol_properties,
+                                                     signature='sa{sv}')
+                })
 
     def connected(self, conn):
         """
@@ -74,3 +85,10 @@ class ConnectionManager(_ConnectionManager):
         conn = self._protos[proto](self, parameters)
         self.connected(conn)
         return (conn._name.get_name(), conn._object_path)
+
+    @property
+    def _protocol_properties(self):
+        properties = {}
+        for name, protocol in self._protocols.items():
+            properties[name] = protocol.GetAll(PROTOCOL)
+        return properties
