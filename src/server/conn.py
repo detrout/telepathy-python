@@ -401,6 +401,31 @@ class ConnectionInterfaceCapabilities(_ConnectionInterfaceCapabilities):
         # return all my capabilities
         return [(ctype, caps[1]) for ctype, caps in my_caps.iteritems()]
 
+    def _diff_capabilities(self, handle, ctype, new_gen=None,
+            new_spec=None, added_gen=None, added_spec=None):
+        """Helper function to diff new caps with actual capabilities."""
+
+        if handle in self._caps and ctype in self._caps[handle]:
+            old_gen, old_spec = self._caps[handle][ctype]
+        else:
+            old_gen = 0
+            old_spec = 0
+
+        if new_gen is None:
+            new_gen = old_gen
+        if new_spec is None:
+            new_spec = old_spec
+        if added_gen:
+            new_gen |= added_gen
+        if added_spec:
+            new_spec |= new_spec
+
+        if old_gen != new_gen or old_spec != new_spec:
+            diff = (int(handle), ctype, old_gen, new_gen, old_spec, new_spec)
+            return diff
+
+        return None
+
 from telepathy._generated.Connection_Interface_Contact_Capabilities \
         import ConnectionInterfaceContactCapabilities \
         as _ConnectionInterfaceContactCapabilities
