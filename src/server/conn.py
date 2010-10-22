@@ -218,6 +218,8 @@ class Connection(_Connection, DBusProperties):
                 suppress_handler)
 
     def remove_channel(self, channel):
+        if channel not in self._channels:
+            return
         self._channels.remove(channel)
         self.ChannelClosed(channel._object_path)
 
