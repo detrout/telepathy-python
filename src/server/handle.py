@@ -46,6 +46,11 @@ class Handle(object):
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    id = property(get_id)
+    type = property(get_type)
+    name = property(get_name)
+
+
 class NoneHandle(Handle):
     def __init__(self):
         Handle.__init__(self, 0, HANDLE_TYPE_NONE, '')
