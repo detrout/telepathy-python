@@ -60,7 +60,7 @@ class Connection(_Connection, DBusProperties):
     _secret_parameters = {}
     _parameter_defaults = {}
 
-    def __init__(self, proto, account, manager=None):
+    def __init__(self, proto, account, manager=None, protocol=None):
         """
         Parameters:
         proto - the name of the protcol this conection should be handling.
@@ -99,7 +99,8 @@ class Connection(_Connection, DBusProperties):
                 'Status': lambda: dbus.UInt32(self.GetStatus())
                  })
 
-        self._proto = proto
+        self._proto = proto # Protocol name
+        self._protocol = protocol # Protocol object
 
         self._status = CONNECTION_STATUS_DISCONNECTED
 

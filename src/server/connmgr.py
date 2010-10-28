@@ -41,7 +41,7 @@ class ConnectionManager(_ConnectionManager, DBusProperties):
 
         self._interfaces = set()
         self._connections = set()
-        self._protos = {} # proto name => Connection class
+        self._protos = {} # proto name => Connection constructor
         self._protocols = {} # proto name => Protocol object
 
         DBusProperties.__init__(self)
@@ -85,6 +85,11 @@ class ConnectionManager(_ConnectionManager, DBusProperties):
         conn = self._protos[proto](self, parameters)
         self.connected(conn)
         return (conn._name.get_name(), conn._object_path)
+
+    def _implement_protocol(self, name, protocol_class):
+        protocol = protocol_class(self)
+        self._protocols[name] = protocol
+        self._protos[name] = protocol.create_connection
 
     @property
     def _protocol_properties(self):

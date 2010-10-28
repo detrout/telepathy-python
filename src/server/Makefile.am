@@ -9,7 +9,8 @@ server_PYTHON = \
 	handle.py \
 	__init__.py \
 	media.py \
-	properties.py
+	properties.py \
+	protocol.py
 
 clean-local:
 	rm -rf *.pyc *.pyo
