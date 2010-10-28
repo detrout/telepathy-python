@@ -75,6 +75,18 @@ class ConnectionManager(_ConnectionManager, DBusProperties):
         if proto not in self._protos:
             raise NotImplemented('unknown protocol %s' % proto)
 
+    def check_protocol(self, proto):
+        if proto not in self._protocols:
+            raise NotImplemented('no protocol object for %s' % proto)
+
+    @dbus.service.method(CONN_MGR_INTERFACE, in_signature='s', out_signature='a(susv)')
+    def GetParameters(self, proto):
+        "Returns the mandatory and optional parameters for the given proto."
+        self.check_proto(proto)
+        self.check_protocol(proto)
+
+        return self._protocols[proto].parameters
+
     @dbus.service.method(CONN_MGR_INTERFACE, in_signature='', out_signature='as')
     def ListProtocols(self):
         return self._protos.keys()
