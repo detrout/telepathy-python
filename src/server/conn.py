@@ -37,6 +37,7 @@ from telepathy.interfaces import (CONN_INTERFACE,
                                   CONN_INTERFACE_CAPABILITIES,
                                   CONN_INTERFACE_PRESENCE,
                                   CONN_INTERFACE_RENAMING,
+                                  CONNECTION_INTERFACE_MAIL_NOTIFICATION,
                                   CONNECTION_INTERFACE_REQUESTS,
                                   CHANNEL_INTERFACE)
 from telepathy.server.handle import Handle, NoneHandle
@@ -603,6 +604,9 @@ class ConnectionInterfaceRequests(
         _success(yours, channel._object_path, returnedProps)
 
         self.signal_new_channels([channel])
+
+from telepathy._generated.Connection_Interface_Mail_Notification \
+        import ConnectionInterfaceMailNotification
 
 from telepathy._generated.Connection_Interface_Presence \
         import ConnectionInterfacePresence
