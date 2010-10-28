@@ -37,7 +37,7 @@ class ChannelManager(object):
         self._fixed_properties = dict()
         self._available_properties = dict()
 
-        self._requestables = dict()
+        self._requestables = list()
 
     def close(self):
         """Close channel manager and all the existing channels."""
@@ -129,8 +129,9 @@ class ChannelManager(object):
         """Implement channel types in the channel manager, and add one channel
         class that is retrieved in RequestableChannelClasses.
 
-        self.implement_channel_classes should be used instead, as it allows
-        implementing multiple channel classes."""
+        self.implement_channel_classes and self.set_requestable_channel_classes
+        should be used instead, as it allows implementing multiple channel
+        classes."""
         warnings.warn('deprecated in favour of implement_channel_classes',
             DeprecationWarning)
 
@@ -141,37 +142,36 @@ class ChannelManager(object):
         self._available_properties[type] = available
 
     # Use this function instead of _implement_channel_class.
-    def implement_channel_classes(self, type, make_channel, classes):
+    def implement_channel_classes(self, type, make_channel, classes=None):
         """Implement channel types in the channel manager, and add channel
         classes that are retrieved in RequestableChannelClasses.
 
           @type: the channel type
           @make_channel: a function to call which returns a Channel object
-          @classes: a list of channel classes. E.g.
+          @classes: (deprecated)
 
-            [ ( { '...ChannelType': '...Text', '...TargetHandleType': HANDLE_TYPE_CONTACT },
-                ['...TargetHandle'] )
-            ]
-
-            See the spec for more documentation on the
-            Requestable_Channel_Class struct.
+        The classes argument has been deprecated and the list of requestable
+        channel classes should be set using set_requestable_channel_classes.
         """
         self._requestable_channels[type] = make_channel
         self._channels.setdefault(type, {})
 
-        self._requestables[type] = classes
+        if classes is not None:
+            warnings.warn('"classes" argument is deprecated',
+                DeprecationWarning)
+            self._requestables.extend(classes)
+
+    def set_requestable_channel_classes(self, requestables):
+        self._requestables = requestables
 
     def get_requestable_channel_classes(self):
         """Return all the channel types that can be created"""
-        retval = []
+        retval = self._requestables
 
+        # backward compatibility
         for channel_type in self._requestable_channels:
-            retval.extend(self._requestables.get(channel_type, []))
-
-            # _implement_channel_class was used.
             if channel_type in self._fixed_properties:
                 retval.append((self._fixed_properties[channel_type],
                     self._available_properties.get(channel_type, [])))
-
 
         return retval
