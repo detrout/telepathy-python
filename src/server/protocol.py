@@ -23,7 +23,8 @@ from telepathy.constants import (CONN_MGR_PARAM_FLAG_REQUIRED,
                                  CONN_MGR_PARAM_FLAG_SECRET,
                                  CONN_MGR_PARAM_FLAG_HAS_DEFAULT)
 from telepathy.errors import InvalidArgument, NotImplemented
-from telepathy.interfaces import PROTOCOL
+from telepathy.interfaces import (PROTOCOL,
+                                  PROTOCOL_INTERFACE_PRESENCE)
 from telepathy.server.properties import DBusProperties
 
 from telepathy._generated.Protocol import Protocol as _Protocol
@@ -159,3 +160,22 @@ class Protocol(_Protocol, DBusProperties):
 
     def create_connection(self, connection_manager, parameters):
         raise NotImplemented('no create_connection for %s' % self._proto)
+
+
+from telepathy._generated.Protocol_Interface_Presence \
+        import ProtocolInterfacePresence \
+        as _ProtocolInterfacePresence
+
+class ProtocolInterfacePresence(_ProtocolInterfacePresence):
+
+    """ Class members to override in CM implementations : """
+    _statuses = {} # Simple Status Spec Map
+
+    def __init__(self):
+        _ProtocolInterfacePresence.__init__(self)
+        self._implement_property_get(PROTOCOL_INTERFACE_PRESENCE, {
+                'Statuses': lambda: self.statuses})
+
+    @property
+    def statuses(self):
+        return dbus.Dictionary(self._statuses, signature='s(ubb)')
