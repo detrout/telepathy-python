@@ -65,8 +65,6 @@ class Channel(_Channel, DBusProperties):
         self._type = props[CHANNEL_INTERFACE + '.ChannelType']
         self._requested = props[CHANNEL_INTERFACE + '.Requested']
 
-        self._immutable_properties = dict()
-
         tht = props.get(CHANNEL_INTERFACE + '.TargetHandleType', HANDLE_TYPE_NONE)
 
         if tht == HANDLE_TYPE_NONE:
@@ -87,7 +85,7 @@ class Channel(_Channel, DBusProperties):
              'TargetID': lambda: dbus.String(self._handle.get_name()),
              'Requested': lambda: self._requested})
 
-        self._add_immutables({
+        self._add_immutable_properties({
             'ChannelType': CHANNEL_INTERFACE,
             'TargetHandle': CHANNEL_INTERFACE,
             'Interfaces': CHANNEL_INTERFACE,
@@ -97,16 +95,8 @@ class Channel(_Channel, DBusProperties):
             })
 
     def _add_immutables(self, props):
-        self._immutable_properties.update(props)
-
-    def get_props(self):
-        """Despite its name, this function actually only returns immutable channel
-        properties."""
-        props = dict()
-        for prop, iface in self._immutable_properties.items():
-            props[iface + '.' + prop] = \
-                self._prop_getters[iface][prop]()
-        return props
+        #backward compatibility
+        self._add_immutable_properties(props)
 
     @dbus.service.method(CHANNEL_INTERFACE, in_signature='', out_signature='')
     def Close(self):
@@ -212,7 +202,7 @@ class ChannelTypeRoomList(Channel, _ChannelTypeRoomListIface):
         self._listing_rooms = False
         self._rooms = {}
 
-        self._add_immutables({'Server': CHANNEL_TYPE_ROOM_LIST})
+        self._add_immutable_properties({'Server': CHANNEL_TYPE_ROOM_LIST})
 
     @dbus.service.method(CHANNEL_TYPE_ROOM_LIST, in_signature='', out_signature='b')
     def GetListingRooms(self):
@@ -314,11 +304,10 @@ from telepathy._generated.Channel_Interface_Chat_State \
 from telepathy._generated.Channel_Interface_Conference \
         import ChannelInterfaceConference as _ChannelInterfaceConference
 
-class ChannelInterfaceConference(_ChannelInterfaceConference, DBusProperties):
+class ChannelInterfaceConference(_ChannelInterfaceConference):
 
     def __init__(self):
         _ChannelInterfaceConference.__init__(self)
-        DBusProperties.__init__(self)
 
         self._conference_channels = set()
         self._conference_initial_channels = set()
@@ -349,7 +338,7 @@ class ChannelInterfaceConference(_ChannelInterfaceConference, DBusProperties):
             })
 
         # Immutable conference properties
-        self._add_immutables({
+        self._add_immutable_properties({
                 'InitialChannels': CHANNEL_INTERFACE_CONFERENCE,
                 'InitialInviteeIDs': CHANNEL_INTERFACE_CONFERENCE,
                 'InitialInviteeHandles': CHANNEL_INTERFACE_CONFERENCE,
@@ -362,11 +351,10 @@ from telepathy._generated.Channel_Interface_DTMF import ChannelInterfaceDTMF
 from telepathy._generated.Channel_Interface_Group \
         import ChannelInterfaceGroup as _ChannelInterfaceGroup
 
-class ChannelInterfaceGroup(_ChannelInterfaceGroup, DBusProperties):
+class ChannelInterfaceGroup(_ChannelInterfaceGroup):
 
     def __init__(self):
         _ChannelInterfaceGroup.__init__(self)
-        DBusProperties.__init__(self)
 
         self._implement_property_get(CHANNEL_INTERFACE_GROUP,
             {'GroupFlags': lambda: dbus.UInt32(self.GetGroupFlags()),

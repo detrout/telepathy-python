@@ -33,6 +33,9 @@ class DBusProperties(dbus.service.Interface):
 
         self._interfaces.add(dbus.PROPERTIES_IFACE)
 
+        if not getattr(self, '_immutable_properties', None):
+            self._immutable_properties = dict()
+
         if not getattr(self, '_prop_getters', None):
             self._prop_getters = {}
             self._prop_setters = {}
@@ -42,6 +45,15 @@ class DBusProperties(dbus.service.Interface):
 
     def _implement_property_set(self, iface, dict):
         self._prop_setters.setdefault(iface, {}).update(dict)
+
+    def _add_immutable_properties(self, props):
+        self._immutable_properties.update(props)
+
+    def get_immutable_properties(self):
+        props = dict()
+        for prop, iface in self._immutable_properties.items():
+            props[iface + '.' + prop] = self._prop_getters[iface][prop]()
+        return props
 
     @dbus.service.method(dbus_interface=dbus.PROPERTIES_IFACE, in_signature='ss', out_signature='v')
     def Get(self, interface_name, property_name):

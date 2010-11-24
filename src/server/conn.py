@@ -226,12 +226,12 @@ class Connection(_Connection, DBusProperties):
             self.signal_new_channels(signal_channels)
 
     def signal_new_channels(self, channels):
-        self.NewChannels([(channel._object_path, channel.get_props())
-            for channel in channels])
+        self.NewChannels([(channel._object_path,
+            channel.get_immutable_properties()) for channel in channels])
 
         # Now NewChannel needs to be called for each new channel.
         for channel in channels:
-            props = channel.get_props()
+            props = channel.get_immutable_properties()
 
             target_handle_type = props[CHANNEL_INTERFACE + '.TargetHandleType']
             target_handle = props[CHANNEL_INTERFACE + '.TargetHandle']
@@ -471,7 +471,8 @@ class ConnectionInterfaceRequests(
                 signature='(a{sv}as)')})
 
     def _get_channels(self):
-        return [(c._object_path, c.get_props()) for c in self._channels]
+        return [(c._object_path, c.get_immutable_properties()) \
+                for c in self._channels]
 
     def _check_basic_properties(self, props):
         # ChannelType must be present and must be a string.
@@ -582,7 +583,7 @@ class ConnectionInterfaceRequests(
 
         channel = self._channel_manager.create_channel_for_props(props, signal=False)
 
-        returnedProps = channel.get_props()
+        returnedProps = channel.get_immutable_properties()
         _success(channel._object_path, returnedProps)
 
         # CreateChannel MUST return *before* NewChannels is emitted.
@@ -600,7 +601,7 @@ class ConnectionInterfaceRequests(
 
         channel = self._channel_manager.channel_for_props(props, signal=False)
 
-        returnedProps = channel.get_props()
+        returnedProps = channel.get_immutable_properties()
         _success(yours, channel._object_path, returnedProps)
 
         self.signal_new_channels([channel])

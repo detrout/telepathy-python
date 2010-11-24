@@ -21,8 +21,7 @@ import dbus
 import dbus.service
 
 from telepathy.errors import NotImplemented
-from telepathy.interfaces import (CONN_MGR_INTERFACE,
-                                  PROTOCOL)
+from telepathy.interfaces import (CONN_MGR_INTERFACE)
 from telepathy.server.properties import DBusProperties
 
 from telepathy._generated.Connection_Manager \
@@ -107,5 +106,5 @@ class ConnectionManager(_ConnectionManager, DBusProperties):
     def _protocol_properties(self):
         properties = {}
         for name, protocol in self._protocols.items():
-            properties[name] = protocol.GetAll(PROTOCOL)
+            properties[name] = protocol.get_immutable_properties()
         return properties

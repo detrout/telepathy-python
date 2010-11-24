@@ -67,6 +67,16 @@ class Protocol(_Protocol, DBusProperties):
                 'Parameters': lambda: self.parameters
                 })
 
+        self._add_immutable_properties({
+                'EnglishName': PROTOCOL,
+                'Icon': PROTOCOL,
+                'VCardField': PROTOCOL,
+                'Interfaces': PROTOCOL,
+                'ConnectionInterfaces': PROTOCOL,
+                'RequestableChannelClasses': PROTOCOL,
+                'Parameters': PROTOCOL
+                })
+
     @property
     def english_name(self):
         return dbus.String(self._english_name)
@@ -175,6 +185,8 @@ class ProtocolInterfacePresence(_ProtocolInterfacePresence):
         _ProtocolInterfacePresence.__init__(self)
         self._implement_property_get(PROTOCOL_INTERFACE_PRESENCE, {
                 'Statuses': lambda: self.statuses})
+        self._add_immutable_properties({
+                'Statuses': PROTOCOL_INTERFACE_PRESENCE})
 
     @property
     def statuses(self):
