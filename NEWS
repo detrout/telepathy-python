@@ -1,5 +1,20 @@
-telepathy-python 0.15.19 (UNRELEASED)
+telepathy-python 0.15.19 (2010-12-03)
 =====================================
+
+Enhancements:
+
+ * Telepathy specification 0.21.4.
+
+ * Default implementation for Conference, ContactCapabilities,
+   Protocol, Protocol.Interface.Presence
+
+ * Created methods to create and ensure handles
+
+ * DBusProperties handle immutable properties
+
+Fixes:
+
+ * Make sure channels are removed from the DBus connection
 
 telepathy-python 0.15.18 (2010-08-05)
 =====================================
