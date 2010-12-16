@@ -64,7 +64,8 @@ class Protocol(_Protocol, DBusProperties):
                 'Interfaces': lambda: self.interfaces,
                 'ConnectionInterfaces': lambda: self.connection_interfaces,
                 'RequestableChannelClasses': lambda: self.requestable_channels,
-                'Parameters': lambda: self.parameters
+                'Parameters': lambda: self.parameters,
+                'AuthenticationTypes': lambda: self.authentication_types,
                 })
 
         self._add_immutable_properties({
@@ -101,6 +102,10 @@ class Protocol(_Protocol, DBusProperties):
     def requestable_channels(self):
         return dbus.Array(self._requestable_channel_classes,
                 signature='(a{sv}as)')
+
+    @property
+    def authentication_types(self):
+        return dbus.Array(self._authentication_types, signature='s')
 
     @property
     def parameters(self):
