@@ -36,7 +36,8 @@ class Protocol(_Protocol, DBusProperties):
     _english_name = ""
     _icon = ""
     _vcard_field = ""
-    
+    _authentication_types = []
+
     # List of Requestable_Channel_Class struct
     _requestable_channel_classe = []
 
