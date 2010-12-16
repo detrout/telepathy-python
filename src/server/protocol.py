@@ -39,7 +39,7 @@ class Protocol(_Protocol, DBusProperties):
     _authentication_types = []
 
     # List of Requestable_Channel_Class struct
-    _requestable_channel_classe = []
+    _requestable_channel_classes = []
 
     _optional_parameters = {}
     _mandatory_parameters = {}
