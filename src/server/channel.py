@@ -177,6 +177,26 @@ class ChannelTypeFileTransfer(Channel, _ChannelTypeFileTransferIface):
             object_path=object_path)
 
 
+from telepathy._generated.Channel_Interface_SASL_Authentication \
+        import ChannelInterfaceSASLAuthentication
+
+from telepathy._generated.Channel_Type_Server_Authentication \
+        import ChannelTypeServerAuthentication as _ChannelTypeServerAuthenticationIface
+
+class ChannelTypeServerAuthentication(Channel, _ChannelTypeServerAuthenticationIface):
+    __doc__ = _ChannelTypeServerAuthenticationIface.__doc__
+
+    def __init__(self, connection, manager, props, object_path=None):
+        """
+        Initialise the channel.
+
+        Parameters:
+        connection - the parent Telepathy Connection object
+        """
+        Channel.__init__(self, connection, manager, props,
+            object_path=object_path)
+
+
 from telepathy._generated.Channel_Type_Streamed_Media \
         import ChannelTypeStreamedMedia as _ChannelTypeStreamedMediaIface
 
