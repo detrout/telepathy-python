@@ -101,9 +101,19 @@ class Channel(_Channel, DBusProperties):
     @dbus.service.method(CHANNEL_INTERFACE, in_signature='', out_signature='')
     def Close(self):
         self.Closed()
+
+        # Do all these separately in case one works but another doesn't.
         try:
             self._chan_manager.remove_channel(self)
+        except:
+            pass
+
+        try:
             self._conn.remove_channel(self)
+        except:
+            pass
+
+        try:
             self.remove_from_connection()
         except:
             pass
