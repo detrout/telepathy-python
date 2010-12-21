@@ -1,6 +1,11 @@
 telepathy-python 0.15.20 (UNRELEASED)
 =====================================
 
+Fixes:
+
+ * fd.o#32526: telepathy-python fails to install with new autotools by
+   installing _generated/errors.py twice. (Reimundo Heluani)
+
 telepathy-python 0.15.19 (2010-12-03)
 =====================================
 
