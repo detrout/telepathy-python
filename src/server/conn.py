@@ -169,8 +169,8 @@ class Connection(_Connection, DBusProperties):
 
     def create_handle(self, type, name, **kwargs):
         id = self.get_handle_id()
-        handle = Handle(id, handle_type, name)
-        self._handles[handle_type, id] = handle
+        handle = Handle(id, type, name)
+        self._handles[type, id] = handle
         return handle
 
     def normalize_handle_name(self, type, name):
