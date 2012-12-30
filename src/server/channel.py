@@ -24,7 +24,7 @@ from telepathy.constants import (CONNECTION_HANDLE_TYPE_NONE,
                                  CHANNEL_TEXT_MESSAGE_TYPE_NORMAL,
                                  HANDLE_TYPE_NONE)
 
-from telepathy.errors import InvalidArgument
+from telepathy.errors import InvalidArgument, NotImplemented
 
 from telepathy.interfaces import (CHANNEL_INTERFACE,
                                   CHANNEL_INTERFACE_CONFERENCE,
@@ -157,7 +157,7 @@ class ChannelTypeContactList(Channel, _ChannelTypeContactListIface):
             object_path=object_path)
 
     def Close(self):
-        raise telepathy.NotImplemented("Contact lists can't be closed")
+        raise NotImplemented("Contact lists can't be closed")
 
 
 from telepathy._generated.Channel_Type_File_Transfer \
