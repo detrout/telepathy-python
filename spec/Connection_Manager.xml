@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <node name="/Connection_Manager" xmlns:tp="http://telepathy.freedesktop.org/wiki/DbusSpec#extensions-v0">
-  <tp:copyright>Copyright (C) 2005-2008 Collabora Limited</tp:copyright>
+  <tp:copyright>Copyright (C) 2005-2012 Collabora Limited</tp:copyright>
   <tp:copyright>Copyright (C) 2005-2008 Nokia Corporation</tp:copyright>
   <tp:copyright>Copyright (C) 2006 INdT</tp:copyright>
   <tp:license xmlns="http://www.w3.org/1999/xhtml">
@@ -45,9 +45,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
           a library on which they are based.</p>
 
         <tp:rationale>
-          <p>We often abbreviate, for instance, telepathy-haze as "Haze",
-            but abbreviating telepathy-sofiasip to "Sofia-SIP" would cause
-            confusion between the connection manager and the library it
+          <p>We often abbreviate, for instance, <i>telepathy-haze</i> as
+            “Haze”, but abbreviating <i>telepathy-sofiasip</i>—since renamed to
+            <i>telepathy-rakia</i> for exactly this reason—to “Sofia-SIP”
+            caused confusion between the connection manager and the library it
             uses. Please don't repeat that mistake.</p>
         </tp:rationale>
       </tp:docstring>
@@ -156,9 +157,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
             and possibly changed on an existing Connection using methods on the
             <code>org.freedesktop.DBus.Properties</code> interface.</p>
 
-          <p>When a parameter with this flag is changed with <tp:dbus-ref
-            namespace="ofdT">Account.UpdateParameters</tp:dbus-ref>, the
-            account manager will attempt to update its value on any running
+          <p>When a new value for a parameter with this flag is passed to
+            <tp:dbus-ref namespace="ofdT">Account.UpdateParameters</tp:dbus-ref>,
+            the account manager will attempt to update its value on any running
+            connections. Similarly, if the parameter also has the
+            <code>Has_Default</code> flag, and is passed in the second argument
+            to <code>UpdateParameters</code>, the default value will be applied
+            to any running
             connections. Thus, clients generally do not need to directly access
             or update the connection property; instead, they SHOULD manipulate
             <tp:dbus-ref namespace="ofdT">Account.Parameters</tp:dbus-ref>.</p>
@@ -191,11 +196,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
         </tp:docstring>
       </arg>
       <tp:docstring>
-        Get a list of the parameters which must or may be provided to the
-        <tp:member-ref>RequestConnection</tp:member-ref> method when connecting
-        to the given protocol,
-        or registering (the boolean &quot;register&quot; parameter is available,
-        and set to true).
+        Get a list of the parameters which may be specified in the
+        <tp:dbus-ref namespace='ofdT.Account'>Parameters</tp:dbus-ref> of an
+        <tp:dbus-ref namespace='ofdT'>Account</tp:dbus-ref> (or, for
+        specialised applications which do not use the account manager, passed
+        to <tp:member-ref>RequestConnection</tp:member-ref>). Some parameters
+        are mandatory, and some parameters only make sense when registering new
+        accounts with the server; see the <tp:type>Param_Spec</tp:type>
+        documentation for more details.
       </tp:docstring>
       <tp:possible-errors>
         <tp:error name="org.freedesktop.Telepathy.Error.NotImplemented">
@@ -226,7 +234,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
     </tp:mapping>
 
     <property name="Protocols" tp:name-for-bindings="Protocols"
-      access="read" type="a{sa{sv}}" tp:type="Protocol_Properties_Map">
+      access="read" type="a{sa{sv}}" tp:type="Protocol_Properties_Map"
+      tp:immutable="yes">
       <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
         <p>A map from protocol identifiers supported by this connection
           manager to the immutable properties of the corresponding
@@ -317,6 +326,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
           with the
           <tp:dbus-ref namespace="org.freedesktop.Telepathy.Connection">Connect</tp:dbus-ref>
           method.</p>
+
+        <p><strong>Most applications should not use this method</strong>: they
+          should instead use the the <tp:dbus-ref
+          namespace='ofdT.Account'>Connection</tp:dbus-ref> property on an
+          <tp:dbus-ref namespace='ofdT'>Account</tp:dbus-ref> object obtained
+          from the <tp:dbus-ref
+          namespace='ofdT'>AccountManager</tp:dbus-ref>. This method is used
+          internally by the account manager to create connections when
+          needed.</p>
 
         <p>The parameters which must and may be provided in the parameters
         dictionary can be discovered with the
@@ -586,7 +604,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
         <dd>ASCII decimal integer, optionally prefixed with "-"</dd>
       <dt>d (double-precision floating point)</dt>
         <dd>ASCII decimal number</dd>
-      <dt>as (array of string)</dt>
+      <dt>as (array of string), ao (array of object path)</dt>
         <dd>A sequence of UTF-8 strings each followed by a semicolon, with
           any semicolons they contain escaped with a backslash
           (the "localestrings" type from the Desktop Entry Specification)</dd>
@@ -609,6 +627,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
       CMs with no .manager file was not explicitly required.</tp:changed>
     <tp:changed version="0.17.16">Prior to version 0.17.16 the serialization
       of string arrays (signature 'as') was not defined</tp:changed>
+    <tp:changed version="0.25.2">Prior to version 0.25.2 the
+      serialization of object-path arrays (signature 'ao') was not
+      defined</tp:changed>
   </interface>
 </node>
 <!-- vim:set sw=2 sts=2 et ft=xml: -->

@@ -145,10 +145,37 @@ USA.</p>
       <tp:added version="0.17.10">Clients MAY assume that if the
         SelfHandle property exists, this signal will be emitted when
         necessary.</tp:added>
+      <tp:deprecated version="0.27.2">Use SelfContactChanged to get the
+      new SelfID at the same time</tp:deprecated>
 
       <arg type="u" tp:type="Contact_Handle" name="Self_Handle">
         <tp:docstring>
           The new value of the SelfHandle property.
+        </tp:docstring>
+      </arg>
+    </signal>
+
+    <signal name="SelfContactChanged"
+        tp:name-for-bindings="Self_Contact_Changed">
+      <tp:docstring>
+        Emitted whenever the <tp:member-ref>SelfHandle</tp:member-ref> and
+        <tp:member-ref>SelfID</tp:member-ref> property
+        changes. If the connection
+        is not yet in the CONNECTED state, this signal is not guaranteed
+        to be emitted.
+      </tp:docstring>
+      <tp:added version="0.27.2">Clients MAY assume that if the
+        SelfHandle and SelfID property exists, this signal will be emitted when
+        necessary.</tp:added>
+
+      <arg type="u" tp:type="Contact_Handle" name="Self_Handle">
+        <tp:docstring>
+          The new value of the SelfHandle property.
+        </tp:docstring>
+      </arg>
+      <arg type="s" name="Self_ID">
+        <tp:docstring>
+          The new value of the SelfID property.
         </tp:docstring>
       </arg>
     </signal>
@@ -159,7 +186,7 @@ USA.</p>
         The handle which represents the user on this connection, which will
         remain valid for the lifetime of this connection, or until a change
         in the user's identifier is signalled by the
-        <tp:member-ref>SelfHandleChanged</tp:member-ref> signal.
+        <tp:member-ref>SelfContactChanged</tp:member-ref> signal.
         If the connection is not yet in the CONNECTED state, the value of
         this property MAY be zero.
       </tp:docstring>
@@ -167,6 +194,19 @@ USA.</p>
         versions, clients should fall back to calling the
         <tp:member-ref>GetSelfHandle</tp:member-ref>
         method.</tp:added>
+    </property>
+
+    <property name="SelfID" tp:name-for-bindings="Self_ID"
+      type="s" access="read">
+      <tp:docstring>
+        The identifier which represents the user on this connection, which will
+        remain valid for the lifetime of this connection, or until a change
+        in the user's identifier is signalled by the
+        <tp:member-ref>SelfContactChanged</tp:member-ref> signal.
+        If the connection is not yet in the CONNECTED state, the value of
+        this property MAY be empty string.
+      </tp:docstring>
+      <tp:added version="0.27.2"/>
     </property>
 
     <method name="GetSelfHandle" tp:name-for-bindings="Get_Self_Handle">
@@ -595,11 +635,17 @@ USA.</p>
         </tp:docstring>
       </tp:enumvalue>
       <tp:enumvalue suffix="List" value="3">
+        <tp:deprecated version="0.25.0">Replaced by <tp:dbus-ref
+          namespace="org.freedesktop.Telepathy">Connection.Interface.ContactList</tp:dbus-ref>
+        </tp:deprecated>
         <tp:docstring>
           A server-generated contact list (see Channel.Interface.Group)
         </tp:docstring>
       </tp:enumvalue>
       <tp:enumvalue suffix="Group" value="4">
+        <tp:deprecated version="0.25.0">Replaced by <tp:dbus-ref
+          namespace="org.freedesktop.Telepathy">Connection.Interface.ContactList</tp:dbus-ref>
+        </tp:deprecated>
         <tp:docstring>
           A user-defined contact list (see Channel.Interface.Group)
         </tp:docstring>
@@ -625,12 +671,18 @@ USA.</p>
 
     <tp:simple-type name="List_Handle" type="u"
       array-name="List_Handle_List">
+      <tp:deprecated version="0.25.0">Replaced by <tp:dbus-ref
+        namespace="org.freedesktop.Telepathy">Connection.Interface.ContactList</tp:dbus-ref>
+      </tp:deprecated>
       <tp:docstring>An unsigned 32-bit integer representing a handle of type
         Handle_Type_List</tp:docstring>
     </tp:simple-type>
 
     <tp:simple-type name="Group_Handle" type="u"
       array-name="Group_Handle_List">
+      <tp:deprecated version="0.25.0">Replaced by <tp:dbus-ref
+        namespace="org.freedesktop.Telepathy">Connection.Interface.ContactList</tp:dbus-ref>
+      </tp:deprecated>
       <tp:docstring>An unsigned 32-bit integer representing a handle of type
         Handle_Type_Group</tp:docstring>
     </tp:simple-type>
@@ -1033,6 +1085,12 @@ USA.</p>
             <dd>Debugging information on the change, corresponding to the
               message part of a D-Bus error message, which SHOULD NOT be
               displayed to users under normal circumstances</dd>
+
+            <dt>server-message (s)</dt>
+            <dd>A human-readable message from the server explaining what
+              happened. This may be in the user's native language, or in the
+              server operator's native language, or even in Lojban.</dd>
+
 	    <dt>user-requested (b), expected-hostname (s), certificate-hostname (s)</dt>
 	    <dd>The same details defined in <tp:type>TLS_Certificate_Rejection</tp:type>.</dd>
           </dl>

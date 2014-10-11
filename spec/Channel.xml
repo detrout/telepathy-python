@@ -102,7 +102,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
           MUST be present and not Handle_Type_None, and
           <tp:member-ref>TargetID</tp:member-ref> MUST NOT be
           present. Properties from
-          <tp:dbus-ref namespace="org.freedesktop.Telepathy.Channel.Interface">Addressing.DRAFT</tp:dbus-ref>
+          <tp:dbus-ref namespace="org.freedesktop.Telepathy.Channel.Interface">Addressing1</tp:dbus-ref>
           MUST NOT be present.</p>
 
         <p>The channel that satisfies the request MUST either:</p>
@@ -150,7 +150,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
           MUST be present and not Handle_Type_None, and
           <tp:member-ref>TargetHandle</tp:member-ref> MUST NOT be
           present. Properties from
-          <tp:dbus-ref namespace="org.freedesktop.Telepathy.Channel.Interface">Addressing.DRAFT</tp:dbus-ref>
+          <tp:dbus-ref namespace="org.freedesktop.Telepathy.Channel.Interface">Addressing1</tp:dbus-ref>
           MUST NOT be present.The request MUST fail with error InvalidHandle,
           without side-effects, if the requested TargetID would not be
           accepted by
@@ -390,7 +390,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
         <tp:rationale>
           <p>On some protocols, the SelfHandle may change (as signalled by
             <tp:dbus-ref
-              namespace="org.freedesktop.Telepathy">Connection.SelfHandleChanged</tp:dbus-ref>),
+              namespace="org.freedesktop.Telepathy">Connection.SelfContactChanged</tp:dbus-ref>),
             but this property is immutable. Hence, locally-requested channels'
             InitiatorHandle and InitiatorID may not match the current
             SelfHandle; <tp:member-ref>Requested</tp:member-ref> can be used to

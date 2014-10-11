@@ -3,10 +3,10 @@
   xmlns:xi="http://www.w3.org/2001/XInclude">
 
 <tp:title>Telepathy D-Bus Interface Specification</tp:title>
-<tp:version>0.21.7</tp:version>
+<tp:version>0.27.3</tp:version>
 
-<tp:copyright>Copyright © 2005-2010 Collabora Limited</tp:copyright>
-<tp:copyright>Copyright © 2005-2010 Nokia Corporation</tp:copyright>
+<tp:copyright>Copyright © 2005-2012 Collabora Limited</tp:copyright>
+<tp:copyright>Copyright © 2005-2011 Nokia Corporation</tp:copyright>
 <tp:copyright>Copyright © 2006 INdT</tp:copyright>
 
 <tp:license xmlns="http://www.w3.org/1999/xhtml">
@@ -32,6 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
   </p>
  </tp:docstring>
  <xi:include href="Connection_Manager.xml"/>
+ <xi:include href="Connection_Manager_Interface_Account_Storage.xml"/>
  <xi:include href="Protocol.xml"/>
  <xi:include href="Protocol_Interface_Addressing.xml"/>
  <xi:include href="Protocol_Interface_Avatars.xml"/>
@@ -47,7 +48,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
    </p>
   </tp:docstring>
   <xi:include href="Connection.xml"/>
-  <xi:include href="Connection_Future.xml"/>
   <xi:include href="Connection_Interface_Contacts.xml"/>
   <xi:include href="Connection_Interface_Requests.xml"/>
 
@@ -55,13 +55,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
    <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
     <p>
      On protocols that support contact lists, these interface expose the user's
-     contact lists, along with presence subscription information and contact
-     list groups (if supported).
+     contact lists, along with presence subscription information, contact
+     list groups (if supported), and the ability to block and unblock contacts
+     (if supported).
     </p>
    </tp:docstring>
 
    <xi:include href="Connection_Interface_Contact_List.xml"/>
    <xi:include href="Connection_Interface_Contact_Groups.xml"/>
+   <xi:include href="Connection_Interface_Contact_Blocking.xml"/>
   </tp:section>
 
   <tp:section name="Contact metadata interfaces">
@@ -105,6 +107,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
    <xi:include href="Connection_Interface_Mail_Notification.xml"/>
    <xi:include href="Connection_Interface_Power_Saving.xml"/>
    <xi:include href="Connection_Interface_Service_Point.xml"/>
+   <xi:include href="Connection_Interface_Sidecars1.xml"/>
+   <xi:include href="Connection_Interface_IRC_Command1.xml"/>
   </tp:section>
  </tp:section>
 
@@ -146,34 +150,76 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
    <xi:include href="Channel_Type_Tubes.xml"/>
   </tp:section>
 
-  <tp:section name="Channel Interfaces">
+  <tp:section name="Channel interfaces">
    <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
     <p>
      A Channel may also implement one or more of the following interfaces,
-     depending on its type:
+     depending on its type. Some interfaces are only applicable to particular
+     channel types, while others may (in principle) appear on any type of
+     channel.
     </p>
    </tp:docstring>
+
    <xi:include href="Channel_Interface_Addressing.xml"/>
    <xi:include href="Channel_Interface_Anonymity.xml"/>
-   <xi:include href="Channel_Interface_Call_State.xml"/>
-   <xi:include href="Channel_Interface_Chat_State.xml"/>
-   <xi:include href="Channel_Interface_Conference.xml"/>
-   <xi:include href="Channel_Interface_DTMF.xml"/>
    <xi:include href="Channel_Interface_Destroyable.xml"/>
+   <xi:include href="Channel_Interface_File_Transfer_Metadata.xml"/>
    <xi:include href="Channel_Interface_Group.xml"/>
-   <xi:include href="Channel_Interface_HTML.xml"/>
-   <xi:include href="Channel_Interface_Hold.xml"/>
-   <xi:include href="Channel_Interface_Media_Signalling.xml"/>
-   <xi:include href="Channel_Interface_Mergeable_Conference.xml"/>
-   <xi:include href="Channel_Interface_Messages.xml"/>
    <xi:include href="Channel_Interface_Password.xml"/>
    <xi:include href="Channel_Interface_Room.xml"/>
+   <xi:include href="Channel_Interface_Room_Config.xml"/>
    <xi:include href="Channel_Interface_SASL_Authentication.xml"/>
-   <xi:include href="Channel_Interface_SMS.xml"/>
+   <xi:include href="Channel_Interface_Captcha_Authentication.xml"/>
+   <xi:include href="Channel_Interface_Credentials_Storage.xml"/>
    <xi:include href="Channel_Interface_Securable.xml"/>
    <xi:include href="Channel_Interface_Service_Point.xml"/>
-   <xi:include href="Channel_Interface_Splittable.xml"/>
+   <xi:include href="Channel_Interface_Subject.xml"/>
+   <xi:include href="Channel_Interface_Picture.xml"/>
    <xi:include href="Channel_Interface_Tube.xml"/>
+
+   <tp:section name="Text-specific interfaces">
+    <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
+      <p>These interfaces may only appear on channels of type <tp:dbus-ref
+        namespace='ofdT.Channel.Type'>Text</tp:dbus-ref>.</p>
+    </tp:docstring>
+
+    <xi:include href="Channel_Interface_Chat_State.xml"/>
+    <xi:include href="Channel_Interface_HTML.xml"/>
+    <xi:include href="Channel_Interface_Messages.xml"/>
+    <xi:include href="Channel_Interface_SMS.xml"/>
+   </tp:section>
+
+   <tp:section name="Streamed Media/Call-related interfaces">
+    <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
+     <p>These interfaces are only applicable to channels of type <tp:dbus-ref
+       namespace='ofdT.Channel.Type'>StreamedMedia</tp:dbus-ref>, with the
+       exception of the <tp:dbus-ref
+       namespace='ofdT.Channel.Interface'>Hold</tp:dbus-ref> and
+       <tp:dbus-ref namespace="ofdT.Channel.Interface">DTMF</tp:dbus-ref>
+       interfaces, which may also appear on <tp:dbus-ref
+       namespace='ofdT.Channel.Type'>Call1</tp:dbus-ref> channels.</p>
+    </tp:docstring>
+
+    <xi:include href="Channel_Interface_Call_State.xml"/>
+    <xi:include href="Channel_Interface_DTMF.xml"/>
+    <xi:include href="Channel_Interface_Hold.xml"/>
+    <xi:include href="Channel_Interface_Media_Signalling.xml"/>
+   </tp:section>
+
+   <tp:section name="Conference-related interfaces">
+    <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
+     <p>These interfaces provide functionality for ad-hoc conference calls and
+       chat rooms. They are primarily intended for <tp:dbus-ref
+       namespace='ofdT.Channel.Type'>Text</tp:dbus-ref>, <tp:dbus-ref
+       namespace='ofdT.Channel.Type'>StreamedMedia</tp:dbus-ref> and
+       <tp:dbus-ref namespace='ofdT.Channel.Type'>Call1</tp:dbus-ref>
+       channels, but may also appear on other types of channel.</p>
+    </tp:docstring>
+
+    <xi:include href="Channel_Interface_Conference.xml"/>
+    <xi:include href="Channel_Interface_Splittable.xml"/>
+    <xi:include href="Channel_Interface_Mergeable_Conference.xml"/>
+   </tp:section>
   </tp:section>
  </tp:section>
 
@@ -195,10 +241,29 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
 
  <tp:section name="Calls">
    <xi:include href="Call_Content.xml"/>
-   <xi:include href="Call_Content_Interface_Media.xml"/>
-   <xi:include href="Call_Content_Interface_Mute.xml"/>
-   <xi:include href="Call_Content_Codec_Offer.xml"/>
+   <xi:include href="Call_Content_Interface_DTMF.xml"/>
    <xi:include href="Call_Stream.xml"/>
+   <xi:include href="Call_Interface_Mute.xml"/>
+ </tp:section>
+
+ <tp:section name="Call media interfaces">
+   <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
+     <p>
+       These interfaces are used when a <tp:dbus-ref
+       namespace='ofdT.Channel.Type'>Call1</tp:dbus-ref> channel
+       doesn't have <tp:dbus-ref
+       namespace="ofdT.Channel.Type.Call1">HardwareStreaming</tp:dbus-ref> to
+       implement the media streaming aspects of a call.
+     </p>
+   </tp:docstring>
+   <xi:include href="Call_Content_Interface_Media.xml"/>
+   <xi:include href="Call_Content_Interface_Video_Control.xml"/>
+   <xi:include href="Call_Content_Interface_Audio_Control.xml"/>
+   <xi:include href="Call_Content_Media_Description.xml"/>
+   <xi:include href="Call_Content_Media_Description_Interface_RTP_Header_Extensions.xml"/>
+   <xi:include href="Call_Content_Media_Description_Interface_RTCP_Feedback.xml"/>
+   <xi:include
+   href="Call_Content_Media_Description_Interface_RTCP_Extended_Reports.xml"/>
    <xi:include href="Call_Stream_Interface_Media.xml"/>
    <xi:include href="Call_Stream_Endpoint.xml"/>
  </tp:section>
@@ -218,11 +283,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
   </p>
  </tp:docstring>
  <xi:include href="Account_Manager.xml"/>
+ <xi:include href="Account_Manager_Interface_Hidden.xml"/>
  <xi:include href="Account.xml"/>
  <xi:include href="Account_Interface_Addressing.xml"/>
  <xi:include href="Account_Interface_Avatar.xml"/>
+ <xi:include href="Account_Interface_Hidden.xml"/>
  <xi:include href="Account_Interface_Storage.xml"/>
- <xi:include href="Account_Interface_Minimum_Presence.xml"/>
+ <xi:include href="Account_Interface_External_Password_Storage.xml"/>
 </tp:section>
 
 <tp:section name="The Channel Dispatcher">
@@ -234,6 +301,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
   </p>
  </tp:docstring>
  <xi:include href="Channel_Dispatcher.xml"/>
+ <xi:include href="Channel_Dispatcher_Interface_Messages1.xml"/>
  <xi:include href="Channel_Dispatcher_Interface_Operation_List.xml"/>
  <xi:include href="Channel_Dispatch_Operation.xml"/>
  <xi:include href="Channel_Request.xml"/>

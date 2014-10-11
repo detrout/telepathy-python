@@ -96,7 +96,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
     </property>
 
     <property name="ContentType" type="s" access="read"
-      tp:name-for-bindings="Content_Type">
+      tp:name-for-bindings="Content_Type" tp:immutable="yes" tp:requestable="yes">
       <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
         <p>The file's MIME type. This cannot change once the channel has
         been created.</p>
@@ -109,7 +109,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
     </property>
 
     <property name="Filename" type="s" access="read"
-      tp:name-for-bindings="Filename">
+      tp:name-for-bindings="Filename" tp:immutable="yes" tp:requestable="yes">
       <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
         <p>The name of the file on the sender's side. This is therefore given
         as a suggested filename for the receiver. This cannot change
@@ -126,7 +126,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
     </property>
 
     <property name="Size" type="t" access="read"
-      tp:name-for-bindings="Size">
+      tp:name-for-bindings="Size" tp:immutable="yes" tp:requestable="yes">
       <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
         <p>The size of the file. If this property is set, then the file
         transfer is guaranteed to be this size. This cannot change once
@@ -145,7 +145,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
     </property>
 
     <property name="ContentHashType" type="u" tp:type="File_Hash_Type"
-      access="read" tp:name-for-bindings="Content_Hash_Type">
+      access="read" tp:name-for-bindings="Content_Hash_Type" tp:immutable="yes"
+      tp:requestable="yes">
       <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
         <p>The type of the <tp:member-ref>ContentHash</tp:member-ref> property.</p>
 
@@ -168,7 +169,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
     </property>
 
     <property name="ContentHash" type="s" access="read"
-      tp:name-for-bindings="Content_Hash">
+      tp:name-for-bindings="Content_Hash" tp:immutable="yes"
+      tp:requestable="yes">
       <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
         <p>Hash of the contents of the file transfer, of type described
         in the value of the <tp:member-ref>ContentHashType</tp:member-ref>
@@ -184,7 +186,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
     </property>
 
     <property name="Description" type="s" access="read"
-      tp:name-for-bindings="Description">
+      tp:name-for-bindings="Description" tp:immutable="yes" tp:requestable="yes">
       <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
         <p>Description of the file transfer. This cannot change once the
         channel has been created.</p>
@@ -197,7 +199,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
     </property>
 
     <property name="Date" type="x" access="read"
-      tp:type="Unix_Timestamp64" tp:name-for-bindings="Date">
+      tp:type="Unix_Timestamp64" tp:name-for-bindings="Date" tp:immutable="yes"
+      tp:requestable="yes">
       <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
         <p>The last modification time of the file being transferred. This
         cannot change once the channel has been created</p>
@@ -210,7 +213,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
 
     <property name="AvailableSocketTypes" type="a{uau}"
       tp:type="Supported_Socket_Map" access="read"
-      tp:name-for-bindings="Available_Socket_Types">
+      tp:name-for-bindings="Available_Socket_Types"
+      tp:immutable="yes" tp:requestable="yes">
       <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
         <p>A mapping from address types (members of Socket_Address_Type) to
         arrays of access-control type (members of Socket_Access_Control)
@@ -243,7 +247,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
     </property>
 
     <property name="InitialOffset" type="t" access="read"
-      tp:name-for-bindings="Initial_Offset">
+      tp:name-for-bindings="Initial_Offset" tp:requestable="yes">
       <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
         <p>The offset in bytes from where the file should be sent. This MUST
         be respected by both the receiver and the sender after the state
@@ -257,6 +261,39 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
 
         <p>This property MUST NOT change after the state of the transfer has
         changed to Open.</p>
+      </tp:docstring>
+    </property>
+
+    <property name="URI" type="s" access="readwrite"
+      tp:name-for-bindings="URI" tp:immutable="sometimes" tp:requestable="yes">
+      <tp:added version="0.21.9"/>
+      <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
+        <p>For outgoing file transfers, this requestable property allows the channel
+        requester to inform observers (and the handler, if it is not the requester
+        itself) of the URI of the file being transferred. Note that the
+        connection manager SHOULD NOT read this file directly; the handler
+        streams the file into the CM through the socket negotiated using
+        <tp:member-ref>ProvideFile</tp:member-ref>.</p>
+
+        <p>On outgoing file transfers, this property MUST NOT change after the channel
+        is requested.</p>
+
+        <p>For incoming file transfers, this property MAY be set by the channel
+        handler before calling <tp:member-ref>AcceptFile</tp:member-ref> to
+        inform observers where the incoming file will be saved. If set by an
+        approver, the handler MUST save the file to that location.
+        Setting this property once <tp:member-ref>AcceptFile</tp:member-ref>
+        has been called MUST fail. Once this property has been set
+        <tp:member-ref>URIDefined</tp:member-ref> is emitted.</p>
+
+        <p>If set, this URI SHOULD generally point to a file on the local system, as
+        defined by <a href='http://www.apps.ietf.org/rfc/rfc1738.html#sec-3.10'>
+        RFC 1738 §3.10</a>; that is, it should be of the form
+        <tt>file:///path/to/file</tt> or <tt>file://localhost/path/to/file</tt>.
+        For outgoing files, this URI MAY use a different scheme, such as
+        <tt>http:</tt>, if a remote resource is being transferred
+        to a contact.</p>
+
       </tp:docstring>
     </property>
 
@@ -524,6 +561,52 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</
         </tp:docstring>
       </arg>
     </signal>
+
+    <signal name="URIDefined"
+      tp:name-for-bindings="URI_Defined">
+      <tp:added version="0.21.9"/>
+      <tp:docstring>
+        Emitted when the value of the <tp:member-ref>URI</tp:member-ref>
+        property has been set. This signal MUST only be emitted on
+        incoming file transfers, and only if the handler sets the
+        <tp:member-ref>URI</tp:member-ref> property before
+        accepting the file.
+      </tp:docstring>
+      <arg name="URI" type="s">
+        <tp:docstring>
+          The value of the <tp:member-ref>URI</tp:member-ref> property.
+        </tp:docstring>
+      </arg>
+    </signal>
+
+    <property name="FileCollection" tp:name-for-bindings="File_Collection"
+      type="s" access="read">
+      <tp:added version="0.27.3"/>
+      <tp:docstring xmlns="http://www.w3.org/1999/xhtml">
+        <p>The collection of files to which this channel belongs,
+          or the empty string if this channel does not belong to
+          a collection of files.</p>
+
+        <p>A channel's FileCollection property can never change.</p>
+
+        <p>At least on GTalk and apparently also on iChat the user can
+          send a set of files to a contact and that contact can then
+          pick and choose which files to actually receive.</p>
+
+        <p> The CM should emit all new FT channels belonging to one collection
+          at the same time. UIs supporting this feature can then
+          bundle all these channels together in some way, and show a
+          nice UI. UIs not supporting it will treat them as separate
+          transfers, which is not great but a reasonable fallback.</p>
+
+        <p>No mechanism is currently defined to indicate whether the UI
+          should expect any more files in the same collection. UIs
+          SHOULD assume that more file transfers may be added to a
+          collection. It is possible that a "no more channels in this
+          collection" indication will be added in a future version of
+          this specification.</p>
+      </tp:docstring>
+    </property>
 
   </interface>
 
