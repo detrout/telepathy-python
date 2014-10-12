@@ -3,6 +3,17 @@ Requirements
 telepathy-python requires dbus-python version >= 0.71; version >= 0.80 is
 recommended.
 
+Building from git
+-----------------
+
+The git repository doesn't have any of the generated code available,
+first you need to run:
+    
+    autogen.sh
+    make
+
+before you can run setup.py
+
 Using an uninstalled version
 ----------------------------
 Because telepathy-python contains generated code, the src directory
