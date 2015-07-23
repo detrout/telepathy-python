@@ -1,3 +1,4 @@
+from __future__ import print_function
 
 import dbus
 import dbus.glib
@@ -19,12 +20,12 @@ def print_members(conn, chan):
         chan[CHANNEL_INTERFACE_GROUP].GetAllMembers())
 
     for member in current:
-        print ' - %s' % (
+        print(' - %s' % (
             conn[CONN_INTERFACE].InspectHandles(
-                CONNECTION_HANDLE_TYPE_CONTACT, [member])[0])
+                CONNECTION_HANDLE_TYPE_CONTACT, [member])[0]))
 
     if not current:
-        print ' (none)'
+        print(' (none)')
 
 class RosterClient:
     def __init__(self, conn):
@@ -42,39 +43,39 @@ class RosterClient:
 
     def status_changed_cb(self, state, reason):
         if state == CONNECTION_STATUS_DISCONNECTED:
-            print 'disconnected: %s' % reason
+            print('disconnected: %s' % reason)
             self.quit()
             return
 
         if state != CONNECTION_STATUS_CONNECTED:
             return
 
-        print 'connected'
+        print('connected')
 
         for name in ('subscribe', 'publish', 'hide', 'allow', 'deny', 'known'):
             try:
                 chan = self._request_list_channel(name)
             except dbus.DBusException:
-                print "'%s' channel is not available" % name
+                print("'%s' channel is not available" % name)
                 continue
 
-            print '%s: members' % name
+            print('%s: members' % name)
             print_members(self.conn, chan)
 
             chan[CHANNEL_INTERFACE_GROUP].connect_to_signal('MembersChanged',
                 lambda *args: self.members_changed_cb(name, *args))
 
-        print 'waiting for changes'
+        print('waiting for changes')
 
     def members_changed_cb(self, name, message, added, removed, local_pending,
             remote_pending, actor, reason):
         if added:
             for handle in added:
-                print '%s: added: %d' % (name, added)
+                print('%s: added: %d' % (name, added))
 
         if removed:
             for handle in removed:
-                print '%s: removed: %d' % (name, added)
+                print('%s: removed: %d' % (name, added))
 
     def run(self):
         self.loop = gobject.MainLoop()
@@ -82,7 +83,7 @@ class RosterClient:
         try:
             self.loop.run()
         except KeyboardInterrupt:
-            print 'interrupted'
+            print('interrupted')
 
     def quit(self):
         self.loop.quit()
@@ -92,10 +93,10 @@ if __name__ == '__main__':
     conn = connection_from_file(sys.argv[1])
     client = RosterClient(conn)
 
-    print "connecting"
+    print("connecting")
     conn[CONN_INTERFACE].Connect()
     client.run()
-    print "disconnecting"
+    print("disconnecting")
 
     try:
         conn[CONN_INTERFACE].Disconnect()

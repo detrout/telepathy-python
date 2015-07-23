@@ -3,6 +3,7 @@
 Example of how to discover exisiting Telepathy connections on the bus, and be
 notified when connections appear and disappear.
 """
+from __future__ import print_function
 
 import dbus
 import dbus.glib
@@ -22,7 +23,7 @@ class Watcher:
         for conn in connections:
             self._watch_conn(conn)
             status = connection_status[conn[CONN_INTERFACE].GetStatus()]
-            print 'found connection: %s (%s)' % (conn.service_name, status)
+            print('found connection: %s (%s)' % (conn.service_name, status))
 
         dbus = bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
         dbus.connect_to_signal('NameOwnerChanged', self._name_owner_changed_cb)
@@ -41,13 +42,13 @@ class Watcher:
                 conn = Connection(service)
                 self._watch_conn(conn)
                 status = connection_status[conn[CONN_INTERFACE].GetStatus()]
-                print 'new connection: %s (%s)' % (name, status)
+                print('new connection: %s (%s)' % (name, status))
             elif new == '':
-                print 'connection gone: %s' % name
+                print('connection gone: %s' % name)
 
     def _status_changed_cb(self, name, status, reason):
-        print 'status changed: %s: %s' % (
-            name, connection_status[status])
+        print('status changed: %s: %s' % (
+            name, connection_status[status]))
 
 if __name__ == '__main__':
     Watcher(dbus.Bus())

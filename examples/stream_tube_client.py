@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import dbus.glib
 import gobject
 import time
@@ -58,11 +60,11 @@ class StreamTubeClient:
 
     def status_changed_cb(self, state, reason):
         if state == CONNECTION_STATUS_CONNECTING:
-            print 'connecting'
+            print('connecting')
         elif state == CONNECTION_STATUS_CONNECTED:
-            print 'connected'
+            print('connected')
         elif state == CONNECTION_STATUS_DISCONNECTED:
-            print 'disconnected'
+            print('disconnected')
             loop.quit()
 
     def ready_cb(self, conn):
@@ -76,7 +78,7 @@ class StreamTubeClient:
         # Salut.
         time.sleep(2)
 
-        print "join muc", self.muc_id
+        print("join muc", self.muc_id)
 
         path, props = self.conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel({
             CHANNEL_INTERFACE + ".ChannelType": CHANNEL_TYPE_TEXT,
@@ -132,31 +134,31 @@ class StreamTubeClient:
 
         state = self.tube[PROPERTIES_IFACE].Get(CHANNEL_INTERFACE_TUBE, 'State')
 
-        print "new stream tube offered by %s. Service: %s. State: %s" % (
-                initiator_id, service, tube_state[state])
+        print("new stream tube offered by %s. Service: %s. State: %s" % (
+                initiator_id, service, tube_state[state]))
 
     def tube_opened(self):
         pass
 
     def tube_channel_state_changed_cb(self, state):
-        print "tubes state changed:", tube_state[state]
+        print("tubes state changed:", tube_state[state])
         if state == TUBE_CHANNEL_STATE_OPEN:
             self.tube_opened()
 
     def tube_closed_cb(self):
-        print "tube closed"
+        print("tube closed")
 
     def stream_tube_new_remote_connection_cb(self, handle, conn_param, conn_id):
-       print "new socket connection on tube from %s (id: %u)" % (
+       print("new socket connection on tube from %s (id: %u)" % (
                self.conn[CONN_INTERFACE].InspectHandles(
                    CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0],
-               conn_id)
+               conn_id))
 
     def stream_tube_new_local_connection_cb(self, conn_id):
-       print "new socket connection on tube (id: %u)" % conn_id
+       print("new socket connection on tube (id: %u)" % conn_id)
 
     def stream_tube_connection_closed_cb(self, conn_id, error, msg):
-        print "socket connection %r has been closed: %s (%s)" % (conn_id, msg, error)
+        print("socket connection %r has been closed: %s (%s)" % (conn_id, msg, error))
 
 class StreamTubeInitiatorClient(StreamTubeClient):
     def __init__(self, account_file, muc_id, contact_id, socket_address=None):
@@ -169,11 +171,11 @@ class StreamTubeInitiatorClient(StreamTubeClient):
             self.socket_address = (socket_address[0],
                     dbus.UInt16(socket_address[1]))
         else:
-            print "Will export socket", socket_address
+            print("Will export socket", socket_address)
             self.socket_address = socket_address
 
     def create_tube(self, handle_type, id):
-        print "Create tube"
+        print("Create tube")
 
         path, props = self.conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel({
             CHANNEL_INTERFACE + ".ChannelType": CHANNEL_TYPE_STREAM_TUBE,
@@ -187,7 +189,7 @@ class StreamTubeInitiatorClient(StreamTubeClient):
         params = dbus.Dictionary({"login": "badger",
             "a_int" : dbus.Int32(69)}, signature='sv')
 
-        print "Offer tube"
+        print("Offer tube")
         self.tube[CHANNEL_TYPE_STREAM_TUBE].Offer(
             SOCKET_ADDRESS_TYPE_IPV4, self.socket_address, SOCKET_ACCESS_CONTROL_LOCALHOST,
             params)
@@ -202,14 +204,14 @@ class StreamTubeJoinerClient(StreamTubeClient):
     def got_tube(self, props):
         StreamTubeClient.got_tube(self, props)
 
-        print "accept tube"
+        print("accept tube")
 
         self.address = self.tube[CHANNEL_TYPE_STREAM_TUBE].Accept(
                 SOCKET_ADDRESS_TYPE_IPV4, SOCKET_ACCESS_CONTROL_LOCALHOST, "",
                 byte_arrays=True)
 
     def tube_opened(self):
-        print "tube opened. Clients can connect to", self.address
+        print("tube opened. Clients can connect to", self.address)
 
         if self.connect_trivial_client:
             self.client = TrivialStreamClient(self.address)
@@ -223,13 +225,13 @@ class TrivialStream:
         try:
             data = s.recv(1024)
             if len(data) > 0:
-                print "received:", data
+                print("received:", data)
         except socket.error as e:
             pass
         return True
 
     def write_socket(self, s, msg):
-        print "send:", msg
+        print("send:", msg)
         try:
             s = s.send(msg)
         except socket.error as e:
@@ -247,7 +249,7 @@ class TrivialStreamServer(TrivialStream):
         s.bind(("127.0.0.1", 0))
 
         self.socket_address = s.getsockname()
-        print "Trivial Server lauched on socket", self.socket_address
+        print("Trivial Server lauched on socket", self.socket_address)
         s.listen(1)
 
         gobject.timeout_add(1000, self.accept_client, s)
@@ -272,5 +274,5 @@ class TrivialStreamClient(TrivialStream):
     def connect(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect(self.socket_address)
-        print "Trivial client connected to", self.socket_address
+        print("Trivial client connected to", self.socket_address)
         gobject.timeout_add(1000, self.read_socket, s)

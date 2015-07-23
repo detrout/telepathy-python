@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+from __future__ import print_function
 
 import os
 import sys
@@ -47,7 +48,7 @@ def debug_divert_messages(filename):
         else:
             logfile = open(filename, 'w')
     except IOError as e:
-        print "Can't open logfile '%s' : '%s'" % (filename, e)
+        print("Can't open logfile '%s' : '%s'" % (filename, e))
         return
 
     sys.stdout = logfile

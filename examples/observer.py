@@ -1,3 +1,4 @@
+from __future__ import print_function
 import dbus.glib
 import gobject
 
@@ -31,10 +32,10 @@ class ExampleObserver(telepathy.server.Observer,
     def ObserveChannels(self, account, connection, channels, dispatch_operation,
                         requests_satisfied, observer_info):
 
-        print "Incoming channels on %s:" % (connection)
+        print("Incoming channels on %s:" % (connection))
         for object, props in channels:
-            print " - %s :: %s" % (props[CHANNEL + '.ChannelType'],
-                                   props[CHANNEL + '.TargetID'])
+            print(" - %s :: %s" % (props[CHANNEL + '.ChannelType'],
+                                   props[CHANNEL + '.TargetID']))
 
 def start():
     ExampleObserver("ExampleObserver")

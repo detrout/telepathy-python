@@ -2,6 +2,7 @@
 Telepathy example which requests the avatar for the user's own handle and
 displays it in a Gtk window.
 """
+from __future__ import print_function
 
 import dbus.glib
 import gtk
@@ -20,15 +21,15 @@ def connection_ready_cb(connection):
     # The connection's status has changed to CONNECTED and its supported
     # interfaces have been checked
 
-    print 'connected and ready'
+    print('connected and ready')
     handle = conn[CONN_INTERFACE].GetSelfHandle()
     tokens = conn[CONN_INTERFACE_AVATARS].GetAvatarTokens([handle])
-    print 'token:', tokens[0]
+    print('token:', tokens[0])
 
     if len(sys.argv) > 2:
         avatar = file(sys.argv[2]).read()
         new_token = conn[CONN_INTERFACE_AVATARS].SetAvatar(avatar, 'image/png')
-        print 'new token:', new_token
+        print('new token:', new_token)
         gtk.main_quit()
         return
 
@@ -48,7 +49,7 @@ def connection_ready_cb(connection):
 if __name__ == '__main__':
     conn = connection_from_file(sys.argv[1], connection_ready_cb)
 
-    print 'connecting'
+    print('connecting')
     conn[CONN_INTERFACE].Connect()
     gtk.main()
     conn[CONN_INTERFACE].Disconnect()

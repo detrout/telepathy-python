@@ -2,6 +2,7 @@
 """
 Example Telepathy chatroom client.
 """
+from __future__ import print_function
 
 import sys
 
@@ -37,7 +38,7 @@ class ChatroomClient:
             [id])
         contact = self.conn[telepathy.CONN_INTERFACE].InspectHandles(
             telepathy.HANDLE_TYPE_CONTACT, [sender])[0]
-        print '<%s> %s' % (contact, text)
+        print('<%s> %s' % (contact, text))
 
     def stdin_cb(self, fd, condition):
         text = fd.readline()[:-1]
@@ -55,9 +56,9 @@ if __name__ == '__main__':
     try:
         loop.run()
     except KeyboardInterrupt:
-        print 'interrupted'
+        print('interrupted')
 
-    print 'disconnecting'
+    print('disconnecting')
 
     try:
         conn[telepathy.CONN_INTERFACE].Disconnect()

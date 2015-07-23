@@ -2,6 +2,7 @@
 """
 Print out the aliases of all contacts on the known list.
 """
+from __future__ import print_function
 
 import dbus.glib
 import gobject
@@ -36,12 +37,12 @@ class AliasesClient:
 
     def status_changed_cb(self, state, reason):
         if state == CONNECTION_STATUS_DISCONNECTED:
-            print 'disconnected: %s' % reason
+            print('disconnected: %s' % reason)
             self.quit()
             return
 
     def ready_cb(self, conn):
-        print 'connected and ready'
+        print('connected and ready')
 
         known_channel = self._request_list_channel('known')
         current, local_pending, remote_pending = (
@@ -51,7 +52,7 @@ class AliasesClient:
         aliases = conn[CONN_INTERFACE_ALIASING].RequestAliases(current)
 
         for handle, name, alias in zip(current, names, aliases):
-            print ' % 3d: %s (%s)' % (handle, alias, name)
+            print(' % 3d: %s (%s)' % (handle, alias, name))
 
         self.quit()
 
@@ -59,14 +60,14 @@ class AliasesClient:
             remote_pending, actor, reason):
         if added:
             for handle in added:
-                print '%s: added: %d' % (name, added)
+                print('%s: added: %d' % (name, added))
 
         if removed:
             for handle in removed:
-                print '%s: removed: %d' % (name, added)
+                print('%s: removed: %d' % (name, added))
 
     def run(self):
-        print "connecting"
+        print("connecting")
         self.conn[CONN_INTERFACE].Connect()
 
         self.loop = gobject.MainLoop()
@@ -74,9 +75,9 @@ class AliasesClient:
         try:
             self.loop.run()
         except KeyboardInterrupt:
-            print 'interrupted'
+            print('interrupted')
 
-        print "disconnecting"
+        print("disconnecting")
         try:
             self.conn[CONN_INTERFACE].Disconnect()
         except dbus.DBusException:

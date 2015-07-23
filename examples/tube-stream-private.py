@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import sys
 import dbus
 from telepathy.constants import (CONNECTION_HANDLE_TYPE_CONTACT)
@@ -28,10 +30,10 @@ class StreamTubeJoinerPrivateClient(StreamTubeJoinerClient):
     def ready_cb(self, conn):
         StreamTubeJoinerClient.ready_cb(self, conn)
 
-        print "waiting for a tube offer from contacts"
+        print("waiting for a tube offer from contacts")
 
 def usage():
-    print "Usage:\n" \
+    print("Usage:\n" \
             "Offer a stream tube to [contact] using the trivial stream server:\n" \
             "\tpython %s [account-file] [contact]\n" \
             "Accept a stream tube from a contact and connect it to the trivial stream client:\n" \
@@ -40,7 +42,7 @@ def usage():
             "\tpython %s [account-file] [contact] [IP] [port]\n" \
             "Accept a stream tube from a contact and wait for connections from an external client:\n" \
             "\tpython %s [account-file] --no-trivial-client\n" \
-            % (sys.argv[0], sys.argv[0], sys.argv[0], sys.argv[0])
+            % (sys.argv[0], sys.argv[0], sys.argv[0], sys.argv[0]))
 
 if __name__ == '__main__':
     args = sys.argv[1:]

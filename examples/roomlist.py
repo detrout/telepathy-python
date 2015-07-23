@@ -1,3 +1,4 @@
+from __future__ import print_function
 import dbus.glib
 import gobject
 import logging
@@ -25,7 +26,7 @@ class RoomListExample:
             self.status_changed_cb)
 
     def run(self):
-        print "main loop running"
+        print("main loop running")
         self.loop = gobject.MainLoop()
         self.loop.run()
 
@@ -37,30 +38,30 @@ class RoomListExample:
     def status_changed_cb(self, state, reason):
         if state != CONNECTION_STATUS_CONNECTED:
             return
-        print "connection became ready, requesting channel"
+        print("connection became ready, requesting channel")
 
         try:
             channel = conn.request_channel(
                 CHANNEL_TYPE_ROOM_LIST, HANDLE_TYPE_NONE, 0, True)
         except Exception as e:
-            print e
+            print(e)
             self.quit()
             return
 
-        print "Connecting to ListingRooms"
+        print("Connecting to ListingRooms")
         channel[CHANNEL_TYPE_ROOM_LIST].connect_to_signal('ListingRooms',
                                                          self.listing_cb)
-        print "Connecting to GotRooms"
+        print("Connecting to GotRooms")
         channel[CHANNEL_TYPE_ROOM_LIST].connect_to_signal('GotRooms',
                                                          self.rooms_cb)
-        print "Calling ListRooms"
+        print("Calling ListRooms")
         channel[CHANNEL_TYPE_ROOM_LIST].ListRooms()
 
     def listing_cb(self, listing):
         if listing:
-            print "Listing rooms..."
+            print("Listing rooms...")
         else:
-            print "Finished listing rooms"
+            print("Finished listing rooms")
             self.quit()
 
     def rooms_cb(self, rooms):
@@ -71,23 +72,23 @@ class RoomListExample:
         for i in xrange(len(rooms)):
             handle, ctype, info = rooms[i]
             name = names[i]
-            print "Found room:", name
-            print "\t", ctype
+            print("Found room:", name)
+            print("\t", ctype)
             for key in info:
-                print "\t", repr(str(key)), " => ", repr(info[key])
+                print("\t", repr(str(key)), " => ", repr(info[key]))
 
 if __name__ == '__main__':
     conn = connection_from_file(sys.argv[1])
 
     ex = RoomListExample(conn)
 
-    print "connecting"
+    print("connecting")
     conn[CONN_INTERFACE].Connect()
 
     try:
         ex.run()
     except KeyboardInterrupt:
-        print "killed"
+        print("killed")
 
-    print "disconnecting"
+    print("disconnecting")
     conn[CONN_INTERFACE].Disconnect()

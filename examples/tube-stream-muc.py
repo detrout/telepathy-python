@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import sys
 import dbus
 
@@ -18,7 +20,7 @@ class StreamTubeInitiatorMucClient(StreamTubeInitiatorClient):
     def muc_joined(self):
         StreamTubeInitiatorClient.muc_joined(self)
 
-        print "muc joined. Create the tube"
+        print("muc joined. Create the tube")
         self.create_tube(CONNECTION_HANDLE_TYPE_ROOM, self.muc_id)
 
 class StreamTubeJoinerMucClient(StreamTubeJoinerClient):
@@ -32,7 +34,7 @@ class StreamTubeJoinerMucClient(StreamTubeJoinerClient):
         self.join_muc()
 
 def usage():
-    print "Usage:\n" \
+    print("Usage:\n" \
             "Offer a stream tube to [muc] using the trivial stream server:\n" \
             "\tpython %s [account-file] [muc] --initiator\n" \
             "Accept a stream tube from [muc] and connect it to the trivial stream client:\n" \
@@ -41,7 +43,7 @@ def usage():
             "\tpython %s [account-file] [muc] [IP] [port]\n" \
             "Accept a stream tube from [muc] and wait for connections from an external client:\n" \
             "\tpython %s [account-file] [muc] --no-trivial-client\n" \
-            % (sys.argv[0], sys.argv[0], sys.argv[0], sys.argv[0])
+            % (sys.argv[0], sys.argv[0], sys.argv[0], sys.argv[0]))
 
 if __name__ == '__main__':
     args = sys.argv[1:]

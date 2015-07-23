@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import dbus.glib
 import gobject
 import logging
@@ -29,16 +31,16 @@ class Message:
         self.conn = connection_from_file(sys.argv[1],
             ready_handler=self.ready_cb)
 
-        print "connecting"
+        print("connecting")
         self.conn[CONN_INTERFACE].Connect()
 
     def ready_cb(self, conn):
-        print "connected"
+        print("connected")
 
         handle = self.conn[CONN_INTERFACE].RequestHandles(
             CONNECTION_HANDLE_TYPE_CONTACT, [self.contact])[0]
 
-        print 'got handle %d for %s' % (handle, self.contact)
+        print('got handle %d for %s' % (handle, self.contact))
 
         channel = self.conn.create_channel(dbus.Dictionary({
                 CHANNEL_INTERFACE + '.ChannelType': CHANNEL_TYPE_TEXT,
@@ -46,7 +48,7 @@ class Message:
                 CHANNEL_INTERFACE + '.TargetHandle': handle
             }, signature='sv'))
 
-        print 'got text channel with handle (%d,%d)' % (CONNECTION_HANDLE_TYPE_CONTACT, handle)
+        print('got text channel with handle (%d,%d)' % (CONNECTION_HANDLE_TYPE_CONTACT, handle))
 
         channel[CHANNEL_TYPE_TEXT].connect_to_signal('Sent', self.sent_cb)
         channel[CHANNEL_TYPE_TEXT].connect_to_signal('Received', self.recvd_cb)
@@ -62,7 +64,7 @@ class Message:
 
 
     def run(self):
-        print "main loop running"
+        print("main loop running")
         self.loop = gobject.MainLoop()
 
         try:
@@ -76,26 +78,26 @@ class Message:
             self.loop = None
 
     def recvd_cb(self, *args):
-        print args
+        print(args)
         id, timestamp, sender, type, flags, text = args
-        print 'message #%d received from handle %d: """%s"""' \
-                % (id, sender, text)
+        print('message #%d received from handle %d: """%s"""' \
+                % (id, sender, text))
         self.quit()
 
     def sent_cb(self, timestamp, type, text):
-        print 'message sent: """%s"""' % text
+        print('message sent: """%s"""' % text)
         # if we Disconnect() immediately, the message might not actually
         # make it to the network before the socket is shut down (this can
         # be the case in Gabble) - as a workaround, delay before disconnecting
         gobject.timeout_add(5000, self.quit)
 
     def send_error_cb(self, error, timestamp, type, text):
-        print 'error sending message: code %d' % error
+        print('error sending message: code %d' % error)
         self.quit()
 
 if __name__ == '__main__':
     if len(sys.argv[2:]) < 1:
-        print 'usage: python %s managerfile recipient [message]' % sys.argv[0]
+        print('usage: python %s managerfile recipient [message]' % sys.argv[0])
         sys.exit(1)
 
     msg = Message(*sys.argv[2:])

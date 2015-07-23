@@ -1,4 +1,6 @@
 #!/usr/bin/python
+from __future__ import print_function
+
 import sys
 import telepathy
 from telepathy.interfaces import CONN_MGR_INTERFACE
@@ -18,29 +20,29 @@ object_path = "/org/freedesktop/Telepathy/ConnectionManager/%s" % manager_name
 object = telepathy.client.ConnectionManager(service_name, object_path)
 manager = object[CONN_MGR_INTERFACE]
 
-print "[ConnectionManager]"
-print "BusName=%s" % service_name
-print "ObjectPath=%s" % object_path
-print
+print("[ConnectionManager]")
+print("BusName=%s" % service_name)
+print("ObjectPath=%s" % object_path)
+print()
 
 protocols = manager.ListProtocols()
 protocols.sort()
 for protocol in protocols:
     defaults = []
-    print "[Protocol %s]" % protocol
+    print("[Protocol %s]" % protocol)
     for param in manager.GetParameters(protocol):
         (name, flags, type, default) = param
 
-        print "param-%s=%s" % (name, type),
+        print("param-%s=%s" % (name, type), end='')
         if flags & CONN_MGR_PARAM_FLAG_REQUIRED:
-            print "required",
+            print("required", end='')
         if flags & CONN_MGR_PARAM_FLAG_REGISTER:
-            print "register",
+            print("register", end='')
         if flags & CONN_MGR_PARAM_FLAG_SECRET:
-            print "secret",
+            print("secret", end='')
         if flags & CONN_MGR_PARAM_FLAG_DBUS_PROPERTY:
-            print "dbus-property",
-        print
+            print("dbus-property", end='')
+        print()
 
         if flags & CONN_MGR_PARAM_FLAG_HAS_DEFAULT:
             defaults.append( (name, type, default) )
@@ -52,5 +54,5 @@ for protocol in protocols:
                 value = "false"
         else:
             value = str(default[2])
-        print "default-%s=%s" % (default[0], value)
+        print("default-%s=%s" % (default[0], value))
     print

@@ -1,3 +1,4 @@
+from __future__ import print_function
 
 import dbus.glib
 import gobject
@@ -62,11 +63,11 @@ class Client:
 
     def status_changed_cb(self, state, reason):
         if state == CONNECTION_STATUS_CONNECTING:
-            print 'connecting'
+            print('connecting')
         elif state == CONNECTION_STATUS_CONNECTED:
-            print 'connected'
+            print('connected')
         elif state == CONNECTION_STATUS_DISCONNECTED:
-            print 'disconnected'
+            print('disconnected')
             loop.quit()
 
     def ready_cb(self, conn):
@@ -80,7 +81,7 @@ class Client:
         # Salut.
         time.sleep(2)
 
-        print "join muc", self.muc_id
+        print("join muc", self.muc_id)
         chan_path, props = self.conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel({
             CHANNEL_INTERFACE + ".ChannelType": CHANNEL_TYPE_TEXT,
             CHANNEL_INTERFACE + ".TargetHandleType": CONNECTION_HANDLE_TYPE_ROOM,
@@ -117,8 +118,8 @@ class Client:
 
         state = self.tube[PROPERTIES_IFACE].Get(CHANNEL_INTERFACE_TUBE, 'State')
 
-        print "new D-Bus tube offered by %s. Service: %s. State: %s" % (
-            initiator_id, service, tube_state[state])
+        print("new D-Bus tube offered by %s. Service: %s. State: %s" % (
+            initiator_id, service, tube_state[state]))
 
     def tube_opened (self):
         group_iface = self.channel_text[CHANNEL_INTERFACE_GROUP]
@@ -129,12 +130,12 @@ class Client:
         self.test = Test(tube_conn, self.conn)
 
     def tube_channel_state_changed_cb(self, state):
-        print "tube state changed:", tube_state[state]
+        print("tube state changed:", tube_state[state])
         if state == TUBE_CHANNEL_STATE_OPEN:
             self.tube_opened()
 
     def tube_closed_cb(self):
-        print "tube closed", id
+        print("tube closed", id)
 
     def text_channel_members_changed_cb(self, message, added, removed,
             local_pending, remote_pending, actor, reason):
@@ -157,7 +158,7 @@ class InitiatorClient(Client):
     def muc_joined(self):
         Client.muc_joined(self)
 
-        print "muc joined. Create the tube"
+        print("muc joined. Create the tube")
 
         self.conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel({
             CHANNEL_INTERFACE + ".ChannelType": CHANNEL_TYPE_DBUS_TUBE,
@@ -171,7 +172,7 @@ class InitiatorClient(Client):
         params = dbus.Dictionary({"login": "badger", "a_int" : 69},
                 signature='sv')
 
-        print "Offer tube"
+        print("Offer tube")
         self.tube_addr = self.tube[CHANNEL_TYPE_DBUS_TUBE].Offer(params,
             SOCKET_ACCESS_CONTROL_CREDENTIALS)
 
@@ -182,7 +183,7 @@ class InitiatorClient(Client):
         gobject.timeout_add (20000, self._emit_test_signal)
 
     def _emit_test_signal (self):
-        print "emit Hello"
+        print("emit Hello")
         self.test.Hello()
         return True
 
@@ -198,7 +199,7 @@ class JoinerClient(Client):
     def got_tube(self, props):
         Client.got_tube(self, props)
 
-        print "Accept tube"
+        print("Accept tube")
         self.tube_addr = self.tube[CHANNEL_TYPE_DBUS_TUBE].Accept(SOCKET_ACCESS_CONTROL_CREDENTIALS)
 
 
@@ -215,7 +216,7 @@ class JoinerClient(Client):
         self_id = self.conn[CONN_INTERFACE].InspectHandles(
                 CONNECTION_HANDLE_TYPE_CONTACT, [self.self_handle])[0]
 
-        print "Hello from %s" % sender
+        print("Hello from %s" % sender)
 
         text = "I'm %s and thank you for your hello" % self_id
         self.test.tube.get_object(sender, PATH).Say(text, dbus_interface=IFACE)
@@ -232,13 +233,13 @@ class Test(Object):
 
     @method(dbus_interface=IFACE, in_signature='s', out_signature='b')
     def Say(self, text):
-        print "I say: %s" % text
+        print("I say: %s" % text)
         return True
 
 def usage():
-    print "python %s [account-file] [muc]\n" \
+    print("python %s [account-file] [muc]\n" \
             "python %s [account-file] [muc] --initiator"\
-            % (sys.argv[0], sys.argv[0])
+            % (sys.argv[0], sys.argv[0]))
 
 if __name__ == '__main__':
     args = sys.argv[1:]

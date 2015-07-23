@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+from __future__ import print_function
 
 import dbus
 import dbus.service
@@ -199,7 +200,7 @@ class Connection(_Connection, DBusProperties):
         # when name and old_owner are the same, and new_owner is
         # blank, it is the client itself releasing its name... aka exiting
         if (name == old_owner and new_owner == "" and name in self._client_handles):
-            print "deleting handles for", name
+            print("deleting handles for", name)
             del self._client_handles[name]
 
     def set_self_handle(self, handle):

@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import dbus
 import dbus.glib
 import gobject
@@ -45,20 +47,20 @@ class Call:
         self.loop.run()
 
     def run(self):
-        print "connecting"
+        print("connecting")
         self.conn[CONN_INTERFACE].Connect()
 
         try:
             self.run_main_loop()
         except KeyboardInterrupt:
-            print "killed"
+            print("killed")
 
             if self.channel:
-                print "closing channel"
+                print("closing channel")
                 self.channel[CHANNEL_INTERFACE].Close()
 
         try:
-            print "disconnecting"
+            print("disconnecting")
             self.conn[CONN_INTERFACE].Disconnect()
         except dbus.DBusException:
             pass
@@ -70,14 +72,14 @@ class Call:
 
     def status_changed_cb(self, state, reason):
         if state == CONNECTION_STATUS_DISCONNECTED:
-            print 'connection closed'
+            print('connection closed')
             self.quit()
 
     def ready_cb(self, conn):
         pass
 
     def request_channel_error_cb(self, exception):
-        print 'error:', exception
+        print('error:', exception)
         self.quit()
 
     def new_channel_cb(self, object_path, channel_type, handle_type, handle,
@@ -88,7 +90,7 @@ class Call:
         self.chan_handle_type = handle_type
         self.chan_handle = handle
 
-        print "new streamed media channel"
+        print("new streamed media channel")
         Channel(self.conn.service_name, object_path,
                 ready_handler=self.channel_ready_cb)
 
@@ -125,7 +127,7 @@ class Call:
         self.pipeline.set_state(gst.STATE_PLAYING)
 
     def get_codec_config (self, channel, stream_id, media_type, direction):
-        print "got codec config"
+        print("got codec config")
         if media_type == farsight.MEDIA_TYPE_VIDEO:
             codecs = [ farsight.Codec(farsight.CODEC_ID_ANY, "H264",
                 farsight.MEDIA_TYPE_VIDEO, 0) ]
@@ -151,7 +153,7 @@ class Call:
             return None
 
     def channel_ready_cb(self, channel):
-        print "channel ready"
+        print("channel ready")
         channel[CHANNEL_INTERFACE].connect_to_signal('Closed', self.closed_cb)
         channel[CHANNEL_INTERFACE_GROUP].connect_to_signal('MembersChanged',
             self.members_changed_cb)
@@ -168,20 +170,20 @@ class Call:
         tfchannel.connect ("stream-created", self.stream_created)
         tfchannel.connect ("stream-get-codec-config", self.get_codec_config)
 
-        print "Channel ready"
+        print("Channel ready")
 
     def stream_error_cb(self, *foo):
-        print 'error: %r' % (foo,)
+        print('error: %r' % (foo,))
         self.channel.close()
 
     def closed_cb(self):
-        print "channel closed"
+        print("channel closed")
         self.quit()
 
     def members_changed_cb(self, message, added, removed, local_pending,
             remote_pending, actor, reason):
-        print 'MembersChanged', (
-            added, removed, local_pending, remote_pending, actor, reason)
+        print( 'MembersChanged', (
+            added, removed, local_pending, remote_pending, actor, reason))
 
 class OutgoingCall(Call):
     def __init__(self, account_file, contact):
@@ -203,7 +205,7 @@ class OutgoingCall(Call):
             if c[1] == CHANNEL_TYPE_STREAMED_MEDIA:
                 self.start_call()
                 return
-        print "No media capabilities found, waiting...."
+        print("No media capabilities found, waiting....")
 
     def capabilities_changed_cb(self, caps):
         for x in caps:
@@ -231,22 +233,22 @@ class OutgoingCall(Call):
 
         channel[CHANNEL_INTERFACE_GROUP].AddMembers([self.handle], "")
 
-        print "requesting audio/video streams"
+        print("requesting audio/video streams")
 
         try:
             channel[CHANNEL_TYPE_STREAMED_MEDIA].RequestStreams(
                 self.handle,
                 [MEDIA_STREAM_TYPE_AUDIO, MEDIA_STREAM_TYPE_VIDEO]);
         except dbus.DBusException as e:
-            print "failed:", e
-            print "requesting audio stream"
+            print("failed:", e)
+            print("requesting audio stream")
 
             try:
                 channel[CHANNEL_TYPE_STREAMED_MEDIA].RequestStreams(
                     self.handle, [MEDIA_STREAM_TYPE_AUDIO]);
             except dbus.DBusException as e:
-                print "failed:" as e
-                print "giving up"
+                print("failed:", e)
+                print("giving up")
                 self.quit()
 
 class IncomingCall(Call):
@@ -258,14 +260,14 @@ class IncomingCall(Call):
     def channel_ready_cb(self, channel):
         Call.channel_ready_cb(self, channel)
 
-        print "accepting incoming call"
+        print("accepting incoming call")
         pending = channel[CHANNEL_INTERFACE_GROUP].GetLocalPendingMembers()
         channel[CHANNEL_INTERFACE_GROUP].AddMembers(pending, "")
 
     def closed_cb(self):
-        print "channel closed"
+        print("channel closed")
         self.channel = None
-        print "waiting for incoming call"
+        print("waiting for incoming call")
 
 if __name__ == '__main__':
     gobject.threads_init()

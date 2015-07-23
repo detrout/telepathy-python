@@ -1,3 +1,4 @@
+from __future__ import print_function
 
 import dbus.glib
 import gobject
@@ -16,15 +17,15 @@ def print_members(conn, chan):
     current, local_pending, remote_pending = (
         chan[CHANNEL_INTERFACE_GROUP].GetAllMembers())
 
-    print 'currently denied:'
+    print('currently denied:')
 
     for member in current:
-        print ' - %s' % (
+        print(' - %s' % (
             conn[CONN_INTERFACE].InspectHandles(
-                CONNECTION_HANDLE_TYPE_CONTACT, [member])[0])
+                CONNECTION_HANDLE_TYPE_CONTACT, [member])[0]))
 
     if not current:
-        print ' (none)'
+        print(' (none)')
 
 class DenyClient:
     def __init__(self, conn, contact):
@@ -38,7 +39,7 @@ class DenyClient:
         if state != CONNECTION_STATUS_CONNECTED:
             return
 
-        print 'connected'
+        print('connected')
         contact_handle = self.conn[CONN_INTERFACE].RequestHandles(
             CONNECTION_HANDLE_TYPE_CONTACT, [self.contact])[0]
         deny_handle = self.conn[CONN_INTERFACE].RequestHandles(
@@ -49,12 +50,12 @@ class DenyClient:
         chan = Channel(self.conn.service_name, chan_path)
 
         print_members(self.conn, chan)
-        print 'denying %s' % self.contact
+        print('denying %s' % self.contact)
         chan[CHANNEL_INTERFACE_GROUP].AddMembers([contact_handle], "")
-        print 'denied'
+        print('denied')
         import time
         time.sleep(5)
-        print 'yeah'
+        print('yeah')
         print_members(self.conn, chan)
         self.quit()
 
@@ -64,7 +65,7 @@ class DenyClient:
         try:
             self.loop.run()
         except KeyboardInterrupt:
-            print 'interrupted'
+            print('interrupted')
 
     def quit(self):
         self.loop.quit()
@@ -75,7 +76,7 @@ if __name__ == '__main__':
     contact = sys.argv[2]
     deny = DenyClient(conn, contact)
 
-    print "connecting"
+    print("connecting")
     conn[CONN_INTERFACE].Connect()
     deny.run()
     conn[CONN_INTERFACE].Disconnect()
