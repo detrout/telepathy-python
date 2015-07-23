@@ -42,7 +42,7 @@ class RoomListExample:
         try:
             channel = conn.request_channel(
                 CHANNEL_TYPE_ROOM_LIST, HANDLE_TYPE_NONE, 0, True)
-        except Exception, e:
+        except Exception as e:
             print e
             self.quit()
             return

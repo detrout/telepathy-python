@@ -237,15 +237,15 @@ class OutgoingCall(Call):
             channel[CHANNEL_TYPE_STREAMED_MEDIA].RequestStreams(
                 self.handle,
                 [MEDIA_STREAM_TYPE_AUDIO, MEDIA_STREAM_TYPE_VIDEO]);
-        except dbus.DBusException, e:
+        except dbus.DBusException as e:
             print "failed:", e
             print "requesting audio stream"
 
             try:
                 channel[CHANNEL_TYPE_STREAMED_MEDIA].RequestStreams(
                     self.handle, [MEDIA_STREAM_TYPE_AUDIO]);
-            except dbus.DBusException, e:
-                print "failed:", e
+            except dbus.DBusException as e:
+                print "failed:" as e
                 print "giving up"
                 self.quit()
 

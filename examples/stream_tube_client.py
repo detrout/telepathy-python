@@ -224,7 +224,7 @@ class TrivialStream:
             data = s.recv(1024)
             if len(data) > 0:
                 print "received:", data
-        except socket.error, e:
+        except socket.error as e:
             pass
         return True
 
@@ -232,7 +232,7 @@ class TrivialStream:
         print "send:", msg
         try:
             s = s.send(msg)
-        except socket.error, e:
+        except socket.error as e:
             pass
         return True
 

@@ -46,7 +46,7 @@ def debug_divert_messages(filename):
             logfile = open(filename[1:], 'a')
         else:
             logfile = open(filename, 'w')
-    except IOError, e:
+    except IOError as e:
         print "Can't open logfile '%s' : '%s'" % (filename, e)
         return
 
