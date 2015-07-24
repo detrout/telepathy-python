@@ -22,7 +22,8 @@ Loads .manager files according to
 http://telepathy.freedesktop.org/wiki/FileFormats.
 """
 
-import ConfigParser, os
+from six.moves import configparser
+import os
 import dircache
 import dbus
 import telepathy
@@ -47,7 +48,7 @@ class ManagerRegistry:
         self.bus = bus
 
     def LoadManager(self, path):
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.read(path)
 
         cm_name = os.path.basename(path)[:-len(".manager")]
@@ -64,7 +65,7 @@ class ManagerRegistry:
                 protocols[proto_name] = dict(config.items(section))
 
         if not protocols:
-            raise ConfigParser.NoSectionError("no protocols found (%s)" % path)
+            raise configparser.NoSectionError("no protocols found (%s)" % path)
 
         self.services[cm_name]["protos"] = protocols
 

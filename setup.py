@@ -8,4 +8,5 @@ setup(
               'telepathy.client',
               'telepathy.server',
               'telepathy._generated'],
+    install_requires=['six'],
 )
