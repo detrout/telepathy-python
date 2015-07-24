@@ -100,6 +100,6 @@ class TubeConnection(Connection):
             # GetDBusNames already returned: fake a participant add event
             # immediately
             added = []
-            for k, v in self.participants.iteritems():
+            for k, v in self.participants.items():
                 added.append((k, v))
             callback(added, [])
