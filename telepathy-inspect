@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from __future__ import print_function
 
 import sys
 
@@ -102,16 +103,16 @@ if __name__ == '__main__':
             raise RuntimeError("connection manager '%s' not found on the bus"
                 % name)
 
-        print get_parameters(name),
+        print(get_parameters(name))
     else:
         managers = get_managers()
 
         if managers:
-            print 'Found connection managers:'
+            print('Found connection managers:')
 
             for manager in managers:
-                print '  %s' % manager
-                print indent(4, inspect_manager(manager))
+                print('  %s' % manager)
+                print(indent(4, inspect_manager(manager)))
         else:
-            print 'No connection managers found'
+            print('No connection managers found')
 
