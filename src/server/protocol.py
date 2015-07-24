@@ -117,14 +117,14 @@ class Protocol(_Protocol, DBusProperties):
         optional_parameters = self._optional_parameters
         default_parameters = self._parameter_defaults
 
-        for parameter_name, parameter_type in mandatory_parameters.iteritems():
+        for parameter_name, parameter_type in mandatory_parameters.items():
             flags = CONN_MGR_PARAM_FLAG_REQUIRED
             if parameter_name in secret_parameters:
                 flags |= CONN_MGR_PARAM_FLAG_SECRET
             param = (parameter_name, flags,  parameter_type, '')
             parameters.append(param)
 
-        for parameter_name, parameter_type in optional_parameters.iteritems():
+        for parameter_name, parameter_type in optional_parameters.items():
             flags = 0
             default = ''
             if parameter_name in secret_parameters:
@@ -145,7 +145,7 @@ class Protocol(_Protocol, DBusProperties):
         Sets defaults according to the defaults if the client has not
         provided any.
         """
-        for (parm, value) in parameters.iteritems():
+        for (parm, value) in parameters.items():
             if parm in self._mandatory_parameters.keys():
                 sig = self._mandatory_parameters[parm]
             elif parm in self._optional_parameters.keys():
@@ -166,7 +166,7 @@ class Protocol(_Protocol, DBusProperties):
             else:
                 raise TypeError('unknown type signature %s in protocol parameters' % type)
 
-        for (parm, value) in self._parameter_defaults.iteritems():
+        for (parm, value) in self._parameter_defaults.items():
             if parm not in parameters:
                 parameters[parm] = value
 

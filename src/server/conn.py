@@ -126,7 +126,7 @@ class Connection(_Connection, DBusProperties):
         Sets defaults according to the defaults if the client has not
         provided any.
         """
-        for (parm, value) in parameters.iteritems():
+        for (parm, value) in parameters.items():
             if parm in self._mandatory_parameters.keys():
                 sig = self._mandatory_parameters[parm]
             elif parm in self._optional_parameters.keys():
@@ -147,7 +147,7 @@ class Connection(_Connection, DBusProperties):
             else:
                 raise TypeError('unknown type signature %s in protocol parameters' % type)
 
-        for (parm, value) in self._parameter_defaults.iteritems():
+        for (parm, value) in self._parameter_defaults.items():
             if parm not in parameters:
                 parameters[parm] = value
 
@@ -387,7 +387,7 @@ class ConnectionInterfaceCapabilities(_ConnectionInterfaceCapabilities):
             changed[ctype] = None
 
         caps = []
-        for ctype, spec_caps in changed.iteritems():
+        for ctype, spec_caps in changed.items():
             gen_old, spec_old = my_caps.get(ctype, (0, 0))
             if spec_caps is None:
                 # channel type no longer supported (provider has gone away)
@@ -402,7 +402,7 @@ class ConnectionInterfaceCapabilities(_ConnectionInterfaceCapabilities):
         self.CapabilitiesChanged(caps)
 
         # return all my capabilities
-        return [(ctype, caps[1]) for ctype, caps in my_caps.iteritems()]
+        return [(ctype, caps[1]) for ctype, caps in my_caps.items()]
 
     def _diff_capabilities(self, handle, ctype, new_gen=None,
             new_spec=None, added_gen=None, added_spec=None):

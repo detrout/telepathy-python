@@ -147,7 +147,7 @@ class ManagerRegistry:
         params = {}
         config = self.services[manager]["protos"][proto]
 
-        for key, val in config.iteritems():
+        for key, val in config.items():
             if not key.startswith('param-'):
                 continue
 
@@ -163,7 +163,7 @@ class ManagerRegistry:
             if "required" in values:
                 flags |= telepathy.CONN_MGR_PARAM_FLAG_REQUIRED
 
-            for key, val in config.iteritems():
+            for key, val in config.items():
                 if key.strip().startswith("default-"+name):
                     if _dbus_py_version < (0, 80):
                         default = dbus.Variant(val.strip(), signature=type)
