@@ -24,7 +24,6 @@ http://telepathy.freedesktop.org/wiki/FileFormats.
 
 from six.moves import configparser
 import os
-import dircache
 import dbus
 import telepathy
 
@@ -96,7 +95,7 @@ class ManagerRegistry:
 
         for path in all_paths:
             if os.path.exists(path):
-                for name in dircache.listdir(path):
+                for name in os.listdir(path):
                     if name.endswith('.manager'):
                         self.LoadManager(os.path.join(path, name))
 
