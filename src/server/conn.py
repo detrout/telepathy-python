@@ -22,6 +22,7 @@ from __future__ import print_function
 import dbus
 import dbus.service
 import re
+import six
 import weakref
 
 from telepathy.constants import (CONNECTION_STATUS_DISCONNECTED,
@@ -49,7 +50,7 @@ from telepathy._generated.Connection import Connection as _Connection
 _BAD = re.compile(r'(?:^[0-9])|(?:[^A-Za-z0-9])')
 
 def _escape_as_identifier(name):
-    if isinstance(name, unicode):
+    if six.PY2 and isinstance(name, six.text_type):
         name = name.encode('utf-8')
     if not name:
         return '_'
@@ -136,7 +137,7 @@ class Connection(_Connection, DBusProperties):
 
             # we currently support strings, (u)int16/32 and booleans
             if sig == 's':
-                if not isinstance(value, unicode):
+                if not isinstance(value, six.text_type):
                     raise InvalidArgument('incorrect type to %s parameter, got %s, expected a string' % (parm, type(value)))
             elif sig in 'iunq':
                 if not isinstance(value, (int, long)):

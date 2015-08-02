@@ -18,6 +18,7 @@
 
 import dbus
 import dbus.service
+import six
 
 from telepathy.constants import (CONN_MGR_PARAM_FLAG_REQUIRED,
                                  CONN_MGR_PARAM_FLAG_SECRET,
@@ -155,7 +156,7 @@ class Protocol(_Protocol, DBusProperties):
 
             # we currently support strings, (u)int16/32 and booleans
             if sig == 's':
-                if not isinstance(value, unicode):
+                if not isinstance(value, six.text_type):
                     raise InvalidArgument('incorrect type to %s parameter, got %s, expected a string' % (parm, type(value)))
             elif sig in 'iunq':
                 if not isinstance(value, (int, long)):
