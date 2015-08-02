@@ -337,14 +337,20 @@ class Connection(_Connection, DBusProperties):
             ret.append(chan)
         return ret
 
+from telepathy._generated.Connection_Interface_Contact_List \
+    import ConnectionInterfaceContactList
+
+from telepathy._generated.Connection_Interface_Contact_Groups \
+    import ConnectionInterfaceContactGroups
+
+from telepathy._generated.Connection_Interface_Contact_Blocking \
+    import ConnectionInterfaceContactBlocking
 
 from telepathy._generated.Connection_Interface_Aliasing \
         import ConnectionInterfaceAliasing
 
-
 from telepathy._generated.Connection_Interface_Avatars \
         import ConnectionInterfaceAvatars
-
 
 from telepathy._generated.Connection_Interface_Capabilities \
         import ConnectionInterfaceCapabilities \
@@ -430,6 +436,9 @@ class ConnectionInterfaceCapabilities(_ConnectionInterfaceCapabilities):
 
         return None
 
+from telepathy._generated.Connection_Interface_Client_Types \
+    import ConnectionInterfaceClientTypes
+
 from telepathy._generated.Connection_Interface_Contact_Capabilities \
         import ConnectionInterfaceContactCapabilities \
         as _ConnectionInterfaceContactCapabilities
@@ -452,6 +461,12 @@ class ConnectionInterfaceContactCapabilities(_ConnectionInterfaceContactCapabili
             ret[handle] = dbus.Array(caps, signature='(a{sv}as)')
 
         return ret
+
+from telepathy._generated.Connection_Interface_Contact_Info \
+    import ConnectionInterfaceContactInfo
+
+from telepathy._generated.Connection_Interface_Location \
+    import ConnectionInterfaceLocation
 
 from telepathy._generated.Connection_Interface_Requests \
         import ConnectionInterfaceRequests \
