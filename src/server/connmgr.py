@@ -90,6 +90,9 @@ class ConnectionManager(_ConnectionManager, DBusProperties):
     def ListProtocols(self):
         return self._protos.keys()
 
+    @dbus.service.method('org.freedesktop.Telepathy.ConnectionManager',
+                         in_signature='sa{sv}',
+                         out_signature='so')
     def RequestConnection(self, proto, parameters):
         self.check_proto(proto)
 
