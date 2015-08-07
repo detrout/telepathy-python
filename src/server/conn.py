@@ -369,14 +369,16 @@ class ConnectionInterfaceCapabilities(_ConnectionInterfaceCapabilities):
     def GetCapabilities(self, handles):
         # Usage of 0 in handles has been deprecated
         handles.remove_all(0)
-        ret = []
+        ret = dbus.Array(signature="a(usuu)")
         handle_type = HANDLE_TYPE_CONTACT
         for handle in handles:
             self.check_handle(handle_type, handle)
             if handle in self._caps:
                 types = self._caps[handle]
                 for ctype, specs in types.items():
-                    ret.append([handle, ctype, specs[0], specs[1]])
+                    ret.append(
+                        dbus.Struct([handle, ctype, specs[0], specs[1]],
+                                    signature="usuu"))
         return ret
 
     @dbus.service.signal(CONN_INTERFACE_CAPABILITIES, signature='a(usuuuu)')
