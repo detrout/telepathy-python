@@ -252,7 +252,7 @@ class Connection(_Connection, DBusProperties):
     @dbus.service.method(CONN_INTERFACE, in_signature='', out_signature='as')
     def GetInterfaces(self):
         self.check_connected()
-        return self._interfaces
+        return list(self._interfaces)
 
     @dbus.service.method(CONN_INTERFACE, in_signature='', out_signature='s')
     def GetProtocol(self):
