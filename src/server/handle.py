@@ -17,13 +17,15 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from telepathy.constants import HANDLE_TYPE_NONE
+from telepathy.constants import HANDLE_TYPE_NONE, LAST_HANDLE_TYPE
+import math
 
 class Handle(object):
     def __init__(self, id, handle_type, name):
         self._id = id
         self._type = handle_type
         self._name = name
+        self._reserve_handle_bits = math.ceil(math.log2(LAST_HANDLE_TYPE))
 
     def get_id(self):
         return self._id
@@ -45,6 +47,12 @@ class Handle(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        return self._id << self._reserve_handle_bits & self._type
+
+    def __str__(self):
+        return "Handle({}, {})".format(self._type, self._id)
 
     id = property(get_id)
     type = property(get_type)
