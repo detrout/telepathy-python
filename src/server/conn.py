@@ -363,7 +363,9 @@ class ConnectionInterfaceCapabilities(_ConnectionInterfaceCapabilities):
         # the first int is the generic caps, the second is the type-specific
         self._caps = {}
 
-    @dbus.service.method(CONN_INTERFACE_CAPABILITIES, in_signature='au', out_signature='a(usuu)')
+    @dbus.service.method(CONN_INTERFACE_CAPABILITIES,
+                         in_signature='au',
+                         out_signature='a(usuu)')
     def GetCapabilities(self, handles):
         # Usage of 0 in handles has been deprecated
         handles.remove_all(0)
