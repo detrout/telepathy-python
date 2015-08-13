@@ -272,7 +272,10 @@ class Connection(_Connection, DBusProperties):
 
         return ret
 
-    @dbus.service.method(CONN_INTERFACE, in_signature='uas', out_signature='au', sender_keyword='sender')
+    @dbus.service.method(CONN_INTERFACE,
+                         in_signature='uas',
+                         out_signature='au',
+                         sender_keyword='sender')
     def RequestHandles(self, handle_type, names, sender):
         self.check_connected()
         self.check_handle_type(handle_type)
