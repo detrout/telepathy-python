@@ -65,7 +65,7 @@ class ChannelManager(object):
         """Return the type, request and target handle from the requested
         properties"""
         type = props[CHANNEL_INTERFACE + '.ChannelType']
-        requested = props[CHANNEL_INTERFACE + '.Requested']
+        requested = props.get(CHANNEL_INTERFACE + '.Requested')
 
         target_handle_type = \
             props.get(CHANNEL_INTERFACE + '.TargetHandleType', HANDLE_TYPE_NONE)

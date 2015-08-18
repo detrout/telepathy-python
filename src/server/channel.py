@@ -63,7 +63,7 @@ class Channel(_Channel, DBusProperties):
         _Channel.__init__(self, self._conn._name, object_path)
 
         self._type = props[CHANNEL_INTERFACE + '.ChannelType']
-        self._requested = props[CHANNEL_INTERFACE + '.Requested']
+        self._requested = props.get(CHANNEL_INTERFACE + '.Requested', True)
 
         tht = props.get(CHANNEL_INTERFACE + '.TargetHandleType', HANDLE_TYPE_NONE)
 
