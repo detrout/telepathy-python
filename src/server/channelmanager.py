@@ -120,9 +120,10 @@ class ChannelManager(object):
         """Return an existing channel with theses properties if it already
         exists, otherwhise return a new one"""
         if channel:
-            return channel
+            return False, channel
         else:
-            return self.create_channel_for_props(props, signal, **args)
+            props[CHANNEL_INTERFACE + '.Requested'] = True
+            return True, self.create_channel_for_props(props, signal, **args)
 
     # Should use implement_channel_classes instead.
     def _implement_channel_class(self, type, make_channel, fixed, available):
