@@ -318,6 +318,9 @@ class Connection(_Connection, DBusProperties):
             hand = self._handles[handle_type, handle]
             self._client_handles[sender].remove((handle_type, hand))
 
+    def handle(self, handle_type, handle):
+        return self._handles.get((handle_type, handle))
+
     @dbus.service.method(CONN_INTERFACE, in_signature='', out_signature='u')
     def GetSelfHandle(self):
         self.check_connected()
